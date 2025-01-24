@@ -1,6 +1,6 @@
-const InsuranceAssignment = require("../models/insuranceAssignmentModel");
+const InsuranceAssignment = require("../models/assignmentModel");
 const User = require("../models/userModel");
-const InsurancePolicy = require("../models/insurancePolicyModel");
+const InsurancePolicy = require("../models/insuranceModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 

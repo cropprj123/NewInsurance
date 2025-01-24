@@ -29,6 +29,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
     "fastify-cookie": "^5.7.0",
+    "form-data": "^4.0.1",
     "geolib": "^3.3.4",
     "helmet": "^8.0.0",
     "hpp": "^0.2.3",
