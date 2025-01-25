@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-
+const capitalizeWords = (str) => {
+  return str ? str.toUpperCase().trim() : str;
+};
 const insurancePolicySchema = new mongoose.Schema(
   {
     name: {
@@ -142,10 +144,14 @@ const insurancePolicySchema = new mongoose.Schema(
         state: {
           type: String,
           required: true,
+          trim: true,
+          set: capitalizeWords,
         },
         district: {
           type: String,
           required: true,
+          trim: true,
+          set: capitalizeWords,
         },
       },
     ],

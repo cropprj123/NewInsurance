@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 const bcrypt = require("bcryptjs");
-
+const capitalizeWords = (str) => {
+  return str ? str.toUpperCase().trim() : str;
+};
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -68,27 +70,26 @@ const userSchema = new mongoose.Schema(
     address: {
       street: {
         type: String,
-        // required: [true, "Street address is required"],
         trim: true,
+        set: capitalizeWords,
       },
       city: {
         type: String,
-        // required: [true, "City is required"],
         trim: true,
+        set: capitalizeWords,
       },
       district: {
         type: String,
-        //required: [true, "District is required"],
         trim: true,
+        set: capitalizeWords,
       },
       state: {
         type: String,
-        //required: [true, "State is required"],
         trim: true,
+        set: capitalizeWords,
       },
       pincode: {
         type: String,
-        //required: [true, "Pincode is required"],
         validate: {
           validator: function (val) {
             return /^[1-9][0-9]{5}$/.test(val);
@@ -99,6 +100,7 @@ const userSchema = new mongoose.Schema(
       landmark: {
         type: String,
         trim: true,
+        set: capitalizeWords,
       },
     },
 

@@ -1,10 +1,24 @@
-const InsurancePolicy = require("../models/insuranceModel");
+const { InsurancePolicy } = require("../models/insuranceModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+exports.createPolicy = catchAsync(async (req, res, next) => {
+  const policy = await InsurancePolicy.create({
+    ...req.body,
+    createdBy: req.user.id,
+  });
 
+  res.status(201).json({
+    status: "success",
+    data: { policy },
+  });
+});
 // Get all policies (accessible to everyone)
 exports.getAllPolicies = catchAsync(async (req, res, next) => {
-  const policies = await InsurancePolicy.find();
+  const policies = await InsurancePolicy.find().populate(
+    "createdBy",
+    "name email"
+  );
+
   res.status(200).json({
     status: "success",
     results: policies.length,
@@ -27,17 +41,6 @@ exports.getPolicy = catchAsync(async (req, res, next) => {
 });
 
 // Create a policy (admin-only)
-exports.createPolicy = catchAsync(async (req, res, next) => {
-  const policy = await InsurancePolicy.create({
-    ...req.body,
-    createdBy: req.user.id, // Set the logged-in admin as the creator
-  });
-
-  res.status(201).json({
-    status: "success",
-    data: { policy },
-  });
-});
 
 // Update a policy (restricted to the creator admin)
 exports.updatePolicy = catchAsync(async (req, res, next) => {

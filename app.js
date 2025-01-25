@@ -6,6 +6,7 @@ const userRouter = require("./routes/userRoute");
 const insuranceRouter = require("./routes/insuranceRoute");
 const cropRouter = require("./routes/predictionRoute");
 const assignmentRouter = require("./routes/assignmentRoute");
+const trackRouter = require("./routes/trackingRoute");
 const AppError = require("./utils/appErrors");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/insurance", insuranceRouter);
 app.use("/api/v1/crops", cropRouter);
 app.use("/api/v1/assign", assignmentRouter);
+app.use("/api/v1/track", trackRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl} url`));
 });
