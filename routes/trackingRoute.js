@@ -6,13 +6,27 @@ const { protect, restrictTo } = require("./../controllers/authController");
 router.use(protect);
 
 router
-  .route("/")
+  .route("/assignment/:insuranceAssignmentId")
   .post(
     restrictTo("agent"),
     farmVisitTrackingController.createFarmVisitTracking
   )
-  .get(
+  .get(farmVisitTrackingController.getFarmVisitTrackingByAssignment);
+router
+  .route("/:id")
+  .get(farmVisitTrackingController.getFarmVisitTrackingById)
+  .patch(
+    restrictTo("agent", "admin"),
+    farmVisitTrackingController.updateFarmVisitTracking
+  )
+  .delete(
     restrictTo("admin"),
+    farmVisitTrackingController.deleteFarmVisitTracking
+  );
+router
+  .route("/")
+  .get(
+    restrictTo("admin", "agent"),
     farmVisitTrackingController.getAllFarmVisitTrackings
   );
 
@@ -23,20 +37,15 @@ router
     farmVisitTrackingController.getIneligibleFarmVisitTrackings
   );
 
-router
-  .route("/:id")
-  .get(farmVisitTrackingController.getFarmVisitTrackingByAssignment)
-  .patch(
-    restrictTo("agent", "admin"),
-    farmVisitTrackingController.updateFarmVisitTracking
-  )
-  .delete(
-    restrictTo("admin"),
-    farmVisitTrackingController.deleteFarmVisitTracking
-  );
-
-router
-  .route("/assignment/:insuranceAssignmentId")
-  .get(farmVisitTrackingController.getFarmVisitTrackingByAssignment);
+// router
+//   .route("/:id")
+//   .patch(
+//     restrictTo("agent", "admin"),
+//     farmVisitTrackingController.updateFarmVisitTracking
+//   )
+//   .delete(
+//     restrictTo("admin"),
+//     farmVisitTrackingController.deleteFarmVisitTracking
+//   );
 
 module.exports = router;

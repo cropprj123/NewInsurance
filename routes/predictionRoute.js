@@ -4,9 +4,40 @@ const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 const FormData = require("form-data");
+
+const translateMiddleware = require("./../controllers/translationController");
 const FLASK_SERVER_URL = "http://127.0.0.1:5000/";
+router.use(translateMiddleware);
+
+router.get("/infopredict", (req, res) => {
+  const inputData = req.query.data.map(parseFloat);
+  axios
+    .post(`${FLASK_SERVER_URL}/withinfo_predict_crop`, {
+      data: inputData,
+    })
+    .then((response) => {
+      res.json({
+        crop: response.data.prediction[0],
+        nitrogen: {
+          description: response.data.n_desc,
+        },
+        phosphorus: {
+          description: response.data.p_desc,
+        },
+        potassium: {
+          description: response.data.k_desc,
+        },
+        message: response.data.message,
+      });
+    })
+    .catch((error) => {
+      console.error("Prediction Error:", error);
+      res.status(500).json({ error: "Prediction failed" });
+    });
+});
 
 // Crop prediction route
+
 router.get("/predict", (req, res) => {
   const inputData = req.query.data.map(parseFloat);
   axios

@@ -1,4 +1,3 @@
-// farmVisitTrackingModel.js
 const mongoose = require("mongoose");
 
 const farmVisitTrackingSchema = new mongoose.Schema(
@@ -12,21 +11,6 @@ const farmVisitTrackingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "FarmVisit",
       default: null,
-    },
-    agent: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    farmer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    insurancePolicy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "InsurancePolicy",
-      required: true,
     },
     farmDetails: {
       cropCondition: {
@@ -48,6 +32,16 @@ const farmVisitTrackingSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
+    },
+
+    insuranceStatus: {
+      type: String,
+      enum: ["Pending", "Active", "Expired", "Cancelled"],
+      default: "Pending",
+    },
+    paymentReceived: {
+      type: Boolean,
+      default: false,
     },
     eligibilityAssessment: {
       isEligible: {
@@ -86,40 +80,58 @@ const farmVisitTrackingSchema = new mongoose.Schema(
   }
 );
 
-farmVisitTrackingSchema.pre("save", function (next) {
-  const ineligibilityReasons = [];
+farmVisitTrackingSchema.pre("save", async function (next) {
+  try {
+    const ineligibilityReasons = [];
 
-  if (
-    this.farmDetails.landMeasurement <
-      this.insurancePolicy.eligibility.minLandArea ||
-    this.farmDetails.landMeasurement >
-      this.insurancePolicy.eligibility.maxLandArea
-  ) {
-    ineligibilityReasons.push("Land area does not meet policy requirements");
+    const populatedAssignment = await this.model("InsuranceAssignment")
+      .findById(this.insuranceAssignment)
+      .populate("insurancePolicy");
+
+    if (!populatedAssignment || !populatedAssignment.insurancePolicy) {
+      return next(
+        new Error(
+          "Insurance Assignment or its associated policy could not be found."
+        )
+      );
+    }
+
+    const { insurancePolicy } = populatedAssignment;
+    const { landMeasurement } = this.farmDetails;
+    const { minLandArea, maxLandArea } = insurancePolicy.eligibility;
+
+    // Validate land measurement
+    if (landMeasurement < minLandArea || landMeasurement > maxLandArea) {
+      ineligibilityReasons.push("Land area does not meet policy requirements");
+    }
+
+    // Additional optional validations you might want to add
+    if (this.environmentalConditions) {
+      const { temperature, rainfall } = this.environmentalConditions;
+
+      if (temperature < insurancePolicy.thresholds?.temperature?.min) {
+        ineligibilityReasons.push("Temperature below policy threshold");
+      }
+
+      if (rainfall < insurancePolicy.thresholds?.rainfall?.min) {
+        ineligibilityReasons.push("Rainfall below policy threshold");
+      }
+    }
+
+    // Update eligibility and status
+    this.eligibilityAssessment.isEligible = ineligibilityReasons.length === 0;
+    this.eligibilityAssessment.ineligibilityReasons = ineligibilityReasons;
+    this.status =
+      ineligibilityReasons.length === 0 ? "Completed" : "Ineligible";
+
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  //   if (
-  //     this.environmentalConditions.temperature <
-  //     this.insurancePolicy.thresholds.temperature.minTemperature
-  //   ) {
-  //     ineligibilityReasons.push("Temperature below policy threshold");
-  //   }
-
-  //   if (
-  //     this.environmentalConditions.rainfall <
-  //     this.insurancePolicy.thresholds.rainfall.minRainfall
-  //   ) {
-  //     ineligibilityReasons.push("Rainfall below policy threshold");
-  //   }
-
-  this.eligibilityAssessment.isEligible = ineligibilityReasons.length === 0;
-  this.eligibilityAssessment.ineligibilityReasons = ineligibilityReasons;
-  this.status = ineligibilityReasons.length === 0 ? "Completed" : "Ineligible";
-
-  next();
 });
-
 const FarmVisitTracking = mongoose.model(
   "FarmVisitTracking",
   farmVisitTrackingSchema
 );
+
+module.exports = FarmVisitTracking;

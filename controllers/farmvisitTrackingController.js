@@ -1,23 +1,19 @@
-// farmVisitTrackingController.js
 const FarmVisitTracking = require("../models/farmvisitTrackingModel");
 const InsuranceAssignment = require("../models/assignmentModel");
-const FarmVisit = require("../models/userLocationModel");
-
 exports.createFarmVisitTracking = async (req, res) => {
   try {
-    const {
-      insuranceAssignmentId,
-      farmVisitId,
-      environmentalConditions,
-      farmDetails,
-    } = req.body;
+    const { insuranceAssignmentId } = req.params;
+    const { farmVisitId, environmentalConditions, farmDetails } = req.body;
 
     const insuranceAssignment = await InsuranceAssignment.findById(
       insuranceAssignmentId
     )
-      .populate("farmer")
-      .populate("insurancePolicy")
-      .populate("agent");
+      .populate("farmer", "name email phone address")
+      .populate(
+        "insurancePolicy",
+        "name cropSeason cropType premium sumInsured eligibility thresholds"
+      )
+      .populate("agent", "name email phone");
 
     if (!insuranceAssignment) {
       return res.status(404).json({
@@ -29,9 +25,6 @@ exports.createFarmVisitTracking = async (req, res) => {
     const farmVisitTracking = await FarmVisitTracking.create({
       insuranceAssignment: insuranceAssignmentId,
       farmVisit: farmVisitId,
-      agent: insuranceAssignment.agent._id,
-      farmer: insuranceAssignment.farmer._id,
-      insurancePolicy: insuranceAssignment.insurancePolicy._id,
       environmentalConditions,
       farmDetails,
     });
@@ -48,13 +41,118 @@ exports.createFarmVisitTracking = async (req, res) => {
   }
 };
 
+exports.getFarmVisitTrackingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const farmVisitTracking = await FarmVisitTracking.findById(id)
+      .populate({
+        path: "insuranceAssignment",
+        populate: [
+          { path: "farmer", select: "name email phone address" },
+          {
+            path: "insurancePolicy",
+            select:
+              "name cropSeason cropType premium sumInsured eligibility thresholds",
+          },
+          { path: "agent", select: "name email phone" },
+        ],
+      })
+      .populate({
+        path: "farmVisit",
+        select:
+          "farmDetails radius geolocation notes visitIdentifier createdAt",
+      });
+
+    if (!farmVisitTracking) {
+      return res.status(404).json({
+        status: "error",
+        message: "Farm visit tracking not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: farmVisitTracking,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.getAllFarmVisitTrackings = async (req, res) => {
+  try {
+    const { status, isEligible, page = 1, limit = 10 } = req.query;
+
+    const filter = {};
+    if (status) filter.status = status;
+    if (isEligible !== undefined)
+      filter["eligibilityAssessment.isEligible"] = isEligible === "true";
+
+    const farmVisitTrackings = await FarmVisitTracking.find(filter)
+      .populate({
+        path: "insuranceAssignment",
+        populate: [
+          { path: "farmer", select: "name email phone address" },
+          {
+            path: "insurancePolicy",
+            select:
+              "name cropSeason cropType premium sumInsured eligibility thresholds",
+          },
+          { path: "agent", select: "name email phone" },
+        ],
+      })
+      .populate({
+        path: "farmVisit",
+        select:
+          "farmDetails radius geolocation notes visitIdentifier createdAt",
+      })
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
+
+    const total = await FarmVisitTracking.countDocuments(filter);
+
+    res.status(200).json({
+      status: "success",
+      results: farmVisitTrackings.length,
+      total,
+      data: farmVisitTrackings,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
 exports.getFarmVisitTrackingByAssignment = async (req, res) => {
   try {
     const { insuranceAssignmentId } = req.params;
 
     const farmVisitTracking = await FarmVisitTracking.findOne({
       insuranceAssignment: insuranceAssignmentId,
-    }).populate("insuranceAssignment farmer agent farmVisit");
+    }).populate({
+      path: "insuranceAssignment",
+      populate: [
+        {
+          path: "farmer",
+          select: "name email phone address",
+        },
+        {
+          path: "insurancePolicy",
+          select: "name cropSeason cropType premium sumInsured eligibility",
+        },
+        {
+          path: "agent",
+          select: "name email phone",
+        },
+      ],
+    });
 
     if (!farmVisitTracking) {
       return res.status(404).json({
@@ -75,45 +173,52 @@ exports.getFarmVisitTrackingByAssignment = async (req, res) => {
   }
 };
 
-exports.getAllFarmVisitTrackings = async (req, res) => {
-  try {
-    const {
-      status,
-      isEligible,
-      agent,
-      farmer,
-      page = 1,
-      limit = 10,
-    } = req.query;
+// exports.getAllFarmVisitTrackings = async (req, res) => {
+//   try {
+//     const { status, isEligible, page = 1, limit = 10 } = req.query;
 
-    const filter = {};
-    if (status) filter.status = status;
-    if (isEligible !== undefined)
-      filter["eligibilityAssessment.isEligible"] = isEligible === "true";
-    if (agent) filter.agent = agent;
-    if (farmer) filter.farmer = farmer;
+//     const filter = {};
+//     if (status) filter.status = status;
+//     if (isEligible !== undefined)
+//       filter["eligibilityAssessment.isEligible"] = isEligible === "true";
 
-    const farmVisitTrackings = await FarmVisitTracking.find(filter)
-      .populate("insuranceAssignment farmer agent farmVisit")
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .sort({ createdAt: -1 });
+//     const farmVisitTrackings = await FarmVisitTracking.find(filter)
+//       .populate({
+//         path: "insuranceAssignment",
+//         populate: [
+//           {
+//             path: "farmer",
+//             select: "name email phone address",
+//           },
+//           {
+//             path: "insurancePolicy",
+//             select: "name cropSeason cropType premium sumInsured eligibility",
+//           },
+//           {
+//             path: "agent",
+//             select: "name email phone",
+//           },
+//         ],
+//       })
+//       .skip((page - 1) * limit)
+//       .limit(Number(limit))
+//       .sort({ createdAt: -1 });
 
-    const total = await FarmVisitTracking.countDocuments(filter);
+//     const total = await FarmVisitTracking.countDocuments(filter);
 
-    res.status(200).json({
-      status: "success",
-      results: farmVisitTrackings.length,
-      total,
-      data: farmVisitTrackings,
-    });
-  } catch (error) {
-    res.status(400).json({
-      status: "error",
-      message: error.message,
-    });
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       results: farmVisitTrackings.length,
+//       total,
+//       data: farmVisitTrackings,
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       status: "error",
+//       message: error.message,
+//     });
+//   }
+// };
 
 exports.updateFarmVisitTracking = async (req, res) => {
   try {
