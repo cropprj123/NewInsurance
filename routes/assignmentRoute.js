@@ -8,19 +8,19 @@ router.use(authController.protect);
 
 router.post(
   "/create",
-  authController.restrictTo("user"),
+  authController.restrictTo("user", "admin", "agent"),
   insuranceAssignmentController.createInsuranceAssignment
 );
 
 router.get(
   "/available-agents/:assignmentId",
-  authController.restrictTo("admin"),
+  authController.restrictTo("admin", "agent"),
   insuranceAssignmentController.findAvailableAgentsForAssignment
 );
 
 router.patch(
-  "/assign-agent",
-  authController.restrictTo("admin"),
+  "/assign-agent/:assignmentId",
+  authController.restrictTo("admin", "agent"),
   insuranceAssignmentController.assignAgentToInsurance
 );
 

@@ -1,11 +1,12 @@
 const InsuranceAssignment = require("../models/assignmentModel");
 const User = require("../models/userModel");
-const InsurancePolicy = require("../models/insuranceModel");
+const { InsurancePolicy } = require("../models/insuranceModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
 exports.createInsuranceAssignment = catchAsync(async (req, res, next) => {
-  const { farmerId, insurancePolicyId } = req.body;
+  const farmerId = req.user.id;
+  const { insurancePolicyId, state, district } = req.body;
 
   const farmer = await User.findById(farmerId);
   const insurancePolicy = await InsurancePolicy.findById(insurancePolicyId);
@@ -14,12 +15,13 @@ exports.createInsuranceAssignment = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid farmer or insurance policy", 400));
   }
 
+  // Explicitly pass state and district from the request body
   const assignment = await InsuranceAssignment.create({
     farmer: farmerId,
     insurancePolicy: insurancePolicyId,
     region: {
-      state: farmer.address.state,
-      district: farmer.address.district,
+      state: state || farmer.address.state,
+      district: district || farmer.address.district,
     },
   });
 
@@ -29,10 +31,11 @@ exports.createInsuranceAssignment = catchAsync(async (req, res, next) => {
   });
 });
 exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
-  const { assignmentId, agentId } = req.body;
+  const { assignmentId } = req.params; // Changed from req.body to req.params
 
   // Validate assignment and agent
   const assignment = await InsuranceAssignment.findById(assignmentId);
+  const { agentId } = req.body; // Agent ID still comes from request body
   const agent = await User.findById(agentId);
   const insurancePolicy = await InsurancePolicy.findById(
     assignment.insurancePolicy

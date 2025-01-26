@@ -56,51 +56,7 @@ router.get("/predictfertilizer", (req, res) => {
       res.status(500).json({ error: "Prediction failed" });
     });
 });
-// const upload = multer({ storage: multer.memoryStorage() });
-// const upload = multer({ dest: "uploads/" });
 
-// router.post(
-//   "/detect-crop-disease",
-//   upload.single("image"),
-//   async (req, res) => {
-//     try {
-//       // Check if file was uploaded
-//       if (!req.file) {
-//         return res.status(400).json({ error: "No image uploaded" });
-//       }
-
-//       // Create FormData
-//       const formData = new FormData();
-//       formData.append("image", fs.createReadStream(req.file.path), {
-//         filename: req.file.originalname,
-//         contentType: req.file.mimetype,
-//       });
-
-//       // Forward to Flask API
-//       const response = await axios.post(
-//         `${FLASK_SERVER_URL}/detect_crop_disease`,
-//         formData,
-//         {
-//           headers: {
-//             ...formData.getHeaders(),
-//           },
-//         }
-//       );
-
-//       // Clean up uploaded file
-//       fs.unlinkSync(req.file.path);
-
-//       // Send predictions back to client
-//       res.json(response.data);
-//     } catch (error) {
-//       console.error("Crop Disease Detection Error:", error);
-//       res.status(500).json({
-//         error: "Crop disease detection failed",
-//         details: error.message,
-//       });
-//     }
-//   }
-// );
 const upload = multer(); // No destination specified
 
 router.post(

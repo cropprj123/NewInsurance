@@ -36,7 +36,6 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
-
 exports.signup = catchAsync(async (req, res, next) => {
   try {
     const newUser = await User.create({
@@ -44,8 +43,15 @@ exports.signup = catchAsync(async (req, res, next) => {
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      role: req.body.role,
       phone: req.body.phone,
+      address: {
+        street: req.body.address.street,
+        city: req.body.address.city,
+        district: req.body.address.district,
+        state: req.body.address.state,
+        pincode: req.body.address.pincode,
+        landmark: req.body.address.landmark,
+      },
     });
 
     newUser.password = undefined;
@@ -55,7 +61,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     if (error.code === 11000) {
       return next(
         new AppError(
-          "Email already exists. Please use a different email address.",
+          "Email or phone number already exists. Please use a different email or phone number.",
           400
         )
       );
