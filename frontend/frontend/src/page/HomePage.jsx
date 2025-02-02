@@ -1,6 +1,3 @@
-// import React from "react";
-// import { Shield, Leaf, Brain, ChartBar, Languages, Camera } from "lucide-react";
-
 // const HomePage = () => {
 //   return (
 //     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
