@@ -1,7 +1,209 @@
 const mongoose = require("mongoose");
-const capitalizeWords = (str) => {
-  return str ? str.toUpperCase().trim() : str;
+const capitalizeWords = (str) => (str ? str.toUpperCase().trim() : str);
+
+// Predefined crop thresholds
+const cropThresholds = {
+  Cereals: {
+    Wheat: {
+      temperature: { min: 10, max: 25 },
+      humidity: { min: 50, max: 70 },
+      rainfall: { min: 500, max: 1200 },
+    },
+    Rice: {
+      temperature: { min: 20, max: 35 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1000, max: 2500 },
+    },
+    Maize: {
+      temperature: { min: 18, max: 32 },
+      humidity: { min: 50, max: 80 },
+      rainfall: { min: 500, max: 800 },
+    },
+    Barley: {
+      temperature: { min: 12, max: 25 },
+      humidity: { min: 40, max: 60 },
+      rainfall: { min: 300, max: 600 },
+    },
+    Sorghum: {
+      temperature: { min: 25, max: 35 },
+      humidity: { min: 50, max: 70 },
+      rainfall: { min: 400, max: 600 },
+    },
+  },
+  Pulses: {
+    Chickpea: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 40, max: 50 },
+      rainfall: { min: 300, max: 600 },
+    },
+    Lentil: {
+      temperature: { min: 18, max: 28 },
+      humidity: { min: 50, max: 60 },
+      rainfall: { min: 400, max: 700 },
+    },
+    Pea: {
+      temperature: { min: 10, max: 25 },
+      humidity: { min: 50, max: 70 },
+      rainfall: { min: 500, max: 1000 },
+    },
+    PigeonPea: {
+      temperature: { min: 20, max: 35 },
+      humidity: { min: 50, max: 75 },
+      rainfall: { min: 600, max: 1200 },
+    },
+  },
+  Oilseeds: {
+    Mustard: {
+      temperature: { min: 10, max: 25 },
+      humidity: { min: 40, max: 60 },
+      rainfall: { min: 300, max: 500 },
+    },
+    Sunflower: {
+      temperature: { min: 20, max: 30 },
+      humidity: { min: 50, max: 75 },
+      rainfall: { min: 500, max: 700 },
+    },
+    Groundnut: {
+      temperature: { min: 25, max: 35 },
+      humidity: { min: 50, max: 80 },
+      rainfall: { min: 500, max: 1000 },
+    },
+    Soybean: {
+      temperature: { min: 20, max: 30 },
+      humidity: { min: 50, max: 80 },
+      rainfall: { min: 600, max: 1200 },
+    },
+  },
+  Vegetables: {
+    Tomato: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 60, max: 80 },
+      rainfall: { min: 500, max: 1200 },
+    },
+    Potato: {
+      temperature: { min: 10, max: 25 },
+      humidity: { min: 70, max: 85 },
+      rainfall: { min: 300, max: 700 },
+    },
+    Onion: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 60, max: 70 },
+      rainfall: { min: 500, max: 800 },
+    },
+    Cabbage: {
+      temperature: { min: 5, max: 25 },
+      humidity: { min: 60, max: 80 },
+      rainfall: { min: 600, max: 1000 },
+    },
+    Carrot: {
+      temperature: { min: 10, max: 25 },
+      humidity: { min: 60, max: 75 },
+      rainfall: { min: 500, max: 900 },
+    },
+  },
+  Fruits: {
+    Mango: {
+      temperature: { min: 20, max: 40 },
+      humidity: { min: 50, max: 80 },
+      rainfall: { min: 750, max: 2500 },
+    },
+    Banana: {
+      temperature: { min: 20, max: 35 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1000, max: 2500 },
+    },
+    Apple: {
+      temperature: { min: 5, max: 25 },
+      humidity: { min: 60, max: 80 },
+      rainfall: { min: 800, max: 1500 },
+    },
+    Citrus: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 60, max: 80 },
+      rainfall: { min: 750, max: 1200 },
+    },
+    Grapes: {
+      temperature: { min: 15, max: 35 },
+      humidity: { min: 50, max: 75 },
+      rainfall: { min: 500, max: 1000 },
+    },
+  },
+  FiberCrops: {
+    Cotton: {
+      temperature: { min: 20, max: 40 },
+      humidity: { min: 60, max: 80 },
+      rainfall: { min: 600, max: 1200 },
+    },
+    Jute: {
+      temperature: { min: 20, max: 35 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1500, max: 2500 },
+    },
+  },
+  SpicesAndPlantationCrops: {
+    Tea: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 75, max: 90 },
+      rainfall: { min: 1500, max: 3000 },
+    },
+    Coffee: {
+      temperature: { min: 18, max: 30 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1200, max: 2500 },
+    },
+    Pepper: {
+      temperature: { min: 20, max: 30 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1250, max: 2500 },
+    },
+    Cardamom: {
+      temperature: { min: 15, max: 30 },
+      humidity: { min: 70, max: 90 },
+      rainfall: { min: 1500, max: 3500 },
+    },
+  },
 };
+
+const cropDetailsSchema = new mongoose.Schema({
+  cropCategory: {
+    type: String,
+    required: true,
+    enum: Object.keys(cropThresholds),
+  },
+  crops: [
+    {
+      cropType: {
+        type: String,
+        required: true,
+      },
+      sumInsured: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      premium: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      thresholds: {
+        temperature: {
+          minTemperature: Number,
+          maxTemperature: Number,
+        },
+        rainfall: {
+          minRainfall: Number,
+          maxRainfall: Number,
+        },
+        humidity: {
+          minHumidity: Number,
+          maxHumidity: Number,
+        },
+      },
+    },
+  ],
+});
+
 const insurancePolicySchema = new mongoose.Schema(
   {
     name: {
@@ -13,8 +215,13 @@ const insurancePolicySchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      default: () =>
-        "CROP-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      default: () => {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000)
+          .toString()
+          .padStart(3, "0");
+        return `CROP-${timestamp}-${random}`;
+      },
     },
     description: {
       type: String,
@@ -26,21 +233,7 @@ const insurancePolicySchema = new mongoose.Schema(
       enum: ["kharif", "rabi", "zaid"],
       required: true,
     },
-    cropType: {
-      type: String,
-      enum: [
-        "paddy",
-        "wheat",
-        "cotton",
-        "sugarcane",
-        "maize",
-        "pulses",
-        "vegetables",
-        "fruits",
-        "other",
-      ],
-      required: true,
-    },
+    cropDetails: [cropDetailsSchema],
     seasonDates: {
       startDate: {
         type: Date,
@@ -63,19 +256,16 @@ const insurancePolicySchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 0,
-      description: "Premium amount per hectare in INR",
     },
     sumInsured: {
       type: Number,
       required: true,
       min: 0,
-      description: "Sum insured amount per hectare in INR",
     },
     agentFee: {
       type: Number,
       required: true,
       min: 0,
-      description: "Fee to be paid to the agent for processing the policy",
     },
     risks: [
       {
@@ -84,32 +274,6 @@ const insurancePolicySchema = new mongoose.Schema(
         required: true,
       },
     ],
-    thresholds: {
-      temperature: {
-        minTemperature: {
-          type: Number,
-          required: true,
-          description: "Minimum temperature in °C to approve the claim",
-        },
-        maxTemperature: {
-          type: Number,
-          required: true,
-          description: "Maximum temperature in °C to approve the claim",
-        },
-      },
-      rainfall: {
-        minRainfall: {
-          type: Number,
-          required: true,
-          description: "Minimum rainfall in mm to approve the claim",
-        },
-        maxRainfall: {
-          type: Number,
-          required: true,
-          description: "Maximum rainfall in mm to approve the claim",
-        },
-      },
-    },
     eligibility: {
       minLandArea: { type: Number, required: true },
       maxLandArea: {
@@ -137,32 +301,18 @@ const insurancePolicySchema = new mongoose.Schema(
           enum: ["crop_loss", "yield_reduction", "quality_damage"],
           required: true,
         },
-        damageSeverity: {
-          type: String,
-          enum: ["mild", "moderate", "severe"],
-          required: true,
-        },
         minimumDamagePercentage: {
           type: Number,
           required: true,
           min: 0,
           max: 100,
-          description: "Minimum percentage of damage required to file a claim",
         },
         compensationPercentage: {
           type: Number,
           required: true,
           min: 0,
           max: 100,
-          description: "Percentage of sum insured to be paid as compensation",
         },
-        requiredDocuments: [
-          {
-            type: String,
-            required: true,
-            enum: ["damage_photos"],
-          },
-        ],
       },
     ],
     regions: [
@@ -181,6 +331,7 @@ const insurancePolicySchema = new mongoose.Schema(
         },
       },
     ],
+
     status: {
       type: String,
       enum: ["active", "inactive", "draft"],
@@ -191,10 +342,6 @@ const insurancePolicySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    lastModifiedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
@@ -202,6 +349,33 @@ const insurancePolicySchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+// Middleware to automatically set thresholds based on crop selection
+insurancePolicySchema.pre("validate", function (next) {
+  this.cropDetails.forEach((categoryDetail) => {
+    categoryDetail.crops.forEach((crop) => {
+      const thresholdData =
+        cropThresholds[categoryDetail.cropCategory]?.[crop.cropType];
+      if (thresholdData) {
+        crop.thresholds = {
+          temperature: {
+            minTemperature: thresholdData.temperature.min,
+            maxTemperature: thresholdData.temperature.max,
+          },
+          rainfall: {
+            minRainfall: thresholdData.rainfall.min,
+            maxRainfall: thresholdData.rainfall.max,
+          },
+          humidity: {
+            minHumidity: thresholdData.humidity.min,
+            maxHumidity: thresholdData.humidity.max,
+          },
+        };
+      }
+    });
+  });
+  next();
+});
 
 insurancePolicySchema.pre("save", function (next) {
   const today = new Date();
@@ -223,7 +397,6 @@ insurancePolicySchema.pre("save", function (next) {
 
   next();
 });
-
 async function updatePolicyStatuses() {
   const today = new Date();
 

@@ -19,7 +19,7 @@ const insuranceAssignmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "assigned", "active", "expired"],
+      enum: ["pending", "assigned"],
       default: "pending",
     },
     assignedDate: {

@@ -18,16 +18,6 @@ const farmVisitTrackingSchema = new mongoose.Schema(
         enum: ["Excellent", "Good", "Fair", "Poor"],
         required: true,
       },
-      cropHealth: {
-        diseasePresent: {
-          type: Boolean,
-          default: false,
-        },
-        diseaseDetails: {
-          type: String,
-          trim: true,
-        },
-      },
       landMeasurement: {
         type: Number,
         required: true,
@@ -54,16 +44,6 @@ const farmVisitTrackingSchema = new mongoose.Schema(
           type: String,
         },
       ],
-    },
-    environmentalConditions: {
-      temperature: {
-        type: Number,
-        required: true,
-      },
-      rainfall: {
-        type: Number,
-        required: true,
-      },
     },
     status: {
       type: String,

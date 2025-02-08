@@ -1,0 +1,677 @@
+[
+  {
+    "name": "Tomato Septoria Leaf Spot",
+    "cropAffected": "Tomato",
+    "scientificName": "Septoria lycopersici",
+    "detailedDescription": "Septoria leaf spot is one of the most devastating foliar diseases affecting tomato cultivation worldwide. This fungal disease can rapidly defoliate plants, significantly reducing yield and fruit quality. It's particularly problematic in regions with humid climates and can persist in soil and plant debris for several years.",
+    "symptoms": [
+      "Initial symptoms appear as small, water-soaked circular spots on lower leaves",
+      "Spots develop into circular lesions 2-3mm in diameter with dark borders and light gray centers",
+      "Characteristic black pycnidia (spore-producing structures) appear in spot centers",
+      "Progressive yellowing of affected leaves starting from bottom of plant",
+      "Severe leaf necrosis leading to complete defoliation",
+      "Stems and petioles can develop elongated lesions",
+      "Fruit rarely affected directly but exposure to sun due to defoliation causes scalding",
+      "Reduced plant vigor and decreased fruit size",
+      "Premature fruit ripening due to plant stress"
+    ],
+    "causes": [
+      "Primary infection from fungal pathogen Septoria lycopersici",
+      "Overwintering in infected plant debris and solanaceous weeds",
+      "Spread through water splash from rain or irrigation",
+      "Wind-blown spores from nearby infected plants",
+      "Poor air circulation due to overcrowding",
+      "Extended periods of leaf wetness (>12 hours)",
+      "Favorable temperature range of 68-77°F (20-25°C)",
+      "High humidity levels (>85%)",
+      "Presence of alternative hosts like horsenettle and jimsonweed"
+    ],
+    "prevention": [
+      "Implement strict crop rotation with non-solanaceous crops for 3-4 years",
+      "Use disease-free certified seeds and transplants",
+      "Maintain proper plant spacing (minimum 3 feet between plants)",
+      "Install drip irrigation or soaker hoses to avoid leaf wetness",
+      "Apply thick organic mulch to prevent soil splash",
+      "Remove and destroy all plant debris after harvest",
+      "Control solanaceous weeds in and around growing area",
+      "Use resistant or tolerant varieties when available",
+      "Plant in well-draining soil with good air circulation",
+      "Regular monitoring for early disease detection",
+      "Maintain balanced nutrition to promote plant health",
+      "Practice fall tillage to bury infected debris"
+    ],
+    "treatment": {
+      "chemical": [
+        "Chlorothalonil (Daconil) - apply every 7-10 days",
+        "Azoxystrobin (Quadris) for systemic control",
+        "Mancozeb products for protective coverage",
+        "Copper-based fungicides like copper hydroxide",
+        "Propiconazole for curative treatment",
+        "Pyraclostrobin + Boscalid combination products",
+        "Thiophanate-methyl for systemic protection"
+      ],
+      "organic": [
+        "Copper sulfate (Bordeaux mixture)",
+        "Neem oil with regular applications",
+        "Potassium bicarbonate sprays",
+        "Bacillus subtilis biological fungicide",
+        "Sulfur-based organic fungicides",
+        "Compost tea applications",
+        "Plant-based oils like thyme and clove"
+      ],
+      "cultural": [
+        "Immediate removal of infected leaves and proper disposal",
+        "Pruning to improve air circulation",
+        "Staking or caging plants to keep them off ground",
+        "Adjusting watering schedule to morning hours only",
+        "Adding calcium to soil to strengthen plant cell walls",
+        "Installing plastic mulch to reduce soil splash",
+        "Using companion plants to improve air flow"
+      ]
+    },
+    "recommendedProducts": [
+      "Daconil Weather Stik",
+      "Bonide Copper Fungicide",
+      "Garden Defense Biological Fungicide",
+      "Southern Ag Triple Action Neem Oil",
+      "Serenade Garden Disease Control",
+      "Monterey Complete Disease Control",
+      "Fertilome Triple Action Plus",
+      "Organocide Plant Doctor Systemic Fungicide"
+    ],
+    "spreadingConditions": [
+      "Temperature range of 60-80°F (15-27°C) with optimum at 68°F (20°C)",
+      "Relative humidity above 85% for extended periods",
+      "Leaf wetness duration exceeding 12 hours",
+      "Frequent rainfall or overhead irrigation",
+      "Poor air circulation in dense canopy",
+      "Presence of susceptible weeds near cultivation area",
+      "Soil splash during watering or rain events",
+      "Overcrowded plant spacing",
+      "Heavy morning dews",
+      "Cloudy, humid weather patterns"
+    ]
+  },
+  {
+    "name": "Tomato Leaf Late Blight",
+    "cropAffected": "Tomato",
+    "scientificName": "Phytophthora infestans",
+    "detailedDescription": "Late blight is a historically significant and highly destructive disease, infamous for causing the Irish Potato Famine in the 1840s. It remains one of the most serious diseases affecting tomatoes and potatoes worldwide. The pathogen can destroy entire fields within days under favorable conditions, making it a major threat to food security and commercial production.",
+    "symptoms": [
+      "Large, dark brown to purplish-black lesions on leaves with yellow borders",
+      "White fuzzy sporulation on leaf undersides, especially in humid conditions",
+      "Rapid tissue necrosis and plant collapse",
+      "Dark brown to black stems with distinctive lesions",
+      "Firm, greasy-looking brown spots on fruit that can cover entire surface",
+      "Characteristic offensive odor from rotting tissue",
+      "Rapid defoliation and stem collapse",
+      "Blue-gray cast to affected foliage",
+      "Complete plant death within 7-10 days under favorable conditions",
+      "Internal fruit discoloration and rot"
+    ],
+    "causes": [
+      "Infection by oomycete pathogen Phytophthora infestans",
+      "Airborne sporangia from infected plants",
+      "Overwintering in potato tubers and volunteer plants",
+      "Survival in greenhouse tomatoes",
+      "Movement of infected transplants",
+      "Spore dispersal through wind and rain",
+      "Multiple pathogen strains with varying virulence",
+      "Year-round survival in frost-free areas",
+      "Cross-infection between tomatoes and potatoes"
+    ],
+    "prevention": [
+      "Plant resistant varieties with Ph-2 and Ph-3 genes",
+      "Use disease-free certified seed and transplants",
+      "Maintain excellent air circulation",
+      "Monitor weather forecasts for disease-favorable conditions",
+      "Implement wide plant spacing",
+      "Avoid overhead irrigation",
+      "Remove volunteer tomato and potato plants",
+      "Create physical barriers between tomato and potato crops",
+      "Regular scouting for early detection",
+      "Use raised beds for better drainage",
+      "Time planting to avoid peak disease periods",
+      "Maintain weed-free growing areas"
+    ],
+    "treatment": {
+      "chemical": [
+        "Mefenoxam + chlorothalonil combinations",
+        "Cymoxanil + famoxadone products",
+        "Azoxystrobin + difenoconazole mixtures",
+        "Mandipropamid systemic fungicide",
+        "Fluopicolide + propamocarb products",
+        "Dimethomorph + ametoctradin sprays",
+        "Oxathiapiprolin-based fungicides"
+      ],
+      "organic": [
+        "Fixed copper products (copper hydroxide)",
+        "Bacillus mycoides isolate J biological fungicide",
+        "Oxidate (hydrogen dioxide)",
+        "Copper octanoate solutions",
+        "Potassium phosphite products",
+        "Streptomyces lydicus biological control",
+        "Plant extract-based fungicides"
+      ],
+      "cultural": [
+        "Immediate removal and destruction of infected plants",
+        "Deep burial or burning of infected material",
+        "Adjust pH to 6.5-7.0 for optimal plant health",
+        "Improve soil drainage",
+        "Increase plant spacing",
+        "Prune for better airflow",
+        "Time irrigation to minimize leaf wetness"
+      ]
+    },
+    "recommendedProducts": [
+      "Ridomil Gold Copper",
+      "Previcur Flex",
+      "Tanos",
+      "Orondis Opti",
+      "Zampro",
+      "Presidio",
+      "Curzate",
+      "Ranman",
+      "Lifegard WG",
+      "Regalia PTO"
+    ],
+    "spreadingConditions": [
+      "Temperatures between 60-70°F (15-21°C)",
+      "Night temperatures below 60°F (15°C)",
+      "Relative humidity above 90%",
+      "Free water on plant surfaces for 8-12 hours",
+      "Cloudy, rainy weather patterns",
+      "Cool nights followed by warm, humid days",
+      "Poor air circulation",
+      "Dense plant canopy",
+      "Frequent irrigation or heavy dews",
+      "Extended periods of leaf wetness"
+    ]
+  },
+  {
+    "name": "Tomato Early Blight Leaf",
+    "cropAffected": "Tomato",
+    "scientificName": "Alternaria solani",
+    "detailedDescription": "Early blight is a common fungal disease that occurs virtually wherever tomatoes are grown. It affects leaves, stems, and fruits of tomatoes, and can significantly reduce yields. Unlike its name suggests, it can occur at any time during the growing season and is particularly severe in areas with heavy dew, frequent rainfall, and high humidity.",
+    "symptoms": [
+      "Dark brown to black concentric rings forming target-like patterns",
+      "Lesions begin on older leaves near the ground",
+      "Yellow haloes around leaf spots",
+      "Coalescence of spots leading to leaf death",
+      "Stem lesions that appear dark, sunken, and concentric",
+      "Fruit spots at stem end, becoming leathery and sunken",
+      "Premature defoliation of lower leaves",
+      "Reduced fruit size and yield",
+      "Dark lesions on seedling stems (collar rot)",
+      "Characteristic V-shaped yellowing pattern on leaves"
+    ],
+    "causes": [
+      "Fungal pathogen Alternaria solani",
+      "Survival on infected plant debris",
+      "Spread through wind-borne spores",
+      "Contaminated seeds",
+      "Soil splash containing spores",
+      "Stressed or wounded plants",
+      "Poor soil fertility",
+      "Overcrowded planting",
+      "Alternative host plants"
+    ],
+    "prevention": [
+      "Use disease-resistant varieties",
+      "Rotate crops for 3-4 years",
+      "Maintain optimal plant nutrition",
+      "Mulch to prevent soil splash",
+      "Space plants for good air circulation",
+      "Remove lower leaves touching soil",
+      "Clean up plant debris after harvest",
+      "Use drip irrigation",
+      "Start with disease-free transplants",
+      "Avoid working with wet plants",
+      "Maintain balanced soil fertility"
+    ],
+    "treatment": {
+      "chemical": [
+        "Chlorothalonil fungicides",
+        "Azoxystrobin + Difenoconazole",
+        "Pyraclostrobin + Boscalid",
+        "Mancozeb products",
+        "Copper-based fungicides",
+        "Trifloxystrobin products",
+        "Fluopyram + Pyrimethanil"
+      ],
+      "organic": [
+        "Copper sulfate",
+        "Bacillus subtilis products",
+        "Neem oil",
+        "Potassium bicarbonate",
+        "Compost tea applications",
+        "Serenade biological fungicide",
+        "Essential oil-based products"
+      ],
+      "cultural": [
+        "Remove infected leaves promptly",
+        "Improve air circulation",
+        "Stake or cage plants",
+        "Proper pruning techniques",
+        "Balanced fertilization",
+        "Morning watering only",
+        "Maintain proper soil pH"
+      ]
+    },
+    "recommendedProducts": [
+      "Quadris Top",
+      "Priaxor",
+      "Bravo Weather Stik",
+      "Luna Tranquility",
+      "Fontelis",
+      "Cabrio",
+      "Double Nickel 55",
+      "Regalia"
+    ],
+    "spreadingConditions": [
+      "Temperatures between 75-85°F (24-29°C)",
+      "High relative humidity (>90%)",
+      "Alternating wet and dry periods",
+      "Heavy dew formation",
+      "Poor air circulation",
+      "Stressed plants",
+      "Excessive nitrogen fertilization",
+      "Leaf wetness periods >8 hours",
+      "Crowded plant spacing"
+    ]
+  },
+  {
+    "name": "Tomato leaf bacterial spot",
+    "cropAffected": "Tomato",
+    "scientificName": "Xanthomonas spp.",
+    "detailedDescription": "Bacterial spot is a common disease affecting tomato leaves, caused by Xanthomonas bacteria. It leads to leaf spots, defoliation, and reduced fruit quality, especially in warm and humid conditions.",
+    "symptoms": [
+      "Small, dark, water-soaked spots on leaves",
+      "Spots with yellow halos",
+      "Leaf curling and distortion",
+      "Premature leaf drop",
+      "Raised, scabby lesions on fruits"
+    ],
+    "causes": [
+      "Infected seeds or transplants",
+      "Spread through water splash",
+      "Warm temperatures (75-90°F)",
+      "High humidity",
+      "Contaminated tools or equipment"
+    ],
+    "prevention": [
+      "Use certified disease-free seeds",
+      "Avoid overhead irrigation",
+      "Practice crop rotation",
+      "Sanitize tools regularly",
+      "Remove plant debris after harvest"
+    ],
+    "treatment": {
+      "chemical": [
+        "Copper-based fungicides",
+        "Streptomycin sulfate",
+        "Mancozeb + copper combinations"
+      ],
+      "organic": [
+        "Bacillus subtilis products",
+        "Garlic extract sprays",
+        "Compost tea applications"
+      ],
+      "cultural": [
+        "Increase plant spacing",
+        "Morning watering only",
+        "Remove infected leaves promptly"
+      ]
+    },
+    "recommendedProducts": [
+      "Bonide Copper Fungicide",
+      "Southern Ag Liquid Copper",
+      "Serenade Garden Disease Control"
+    ],
+    "spreadingConditions": [
+      "Warm temperatures (75-90°F)",
+      "High humidity",
+      "Frequent rainfall or overhead irrigation",
+      "Poor air circulation"
+    ]
+  },
+  {
+    "name": "Tomato leaf bacterial spots",
+    "cropAffected": "Tomato",
+    "scientificName": "Pseudomonas syringae",
+    "detailedDescription": "Bacterial spots caused by Pseudomonas syringae are similar to bacterial spot but often appear as smaller, more numerous lesions. It thrives in cool, wet conditions and can lead to significant yield loss.",
+    "symptoms": [
+      "Tiny, dark, water-soaked spots",
+      "Spots with yellow halos",
+      "Leaf yellowing and curling",
+      "Premature defoliation",
+      "Fruit lesions in severe cases"
+    ],
+    "causes": [
+      "Infected seeds or transplants",
+      "Cool, wet weather",
+      "Spread through water splash",
+      "Contaminated tools or equipment"
+    ],
+    "prevention": [
+      "Use disease-free seeds",
+      "Avoid overhead irrigation",
+      "Sanitize tools regularly",
+      "Remove plant debris",
+      "Practice crop rotation"
+    ],
+    "treatment": {
+      "chemical": [
+        "Copper-based fungicides",
+        "Streptomycin sulfate",
+        "Oxytetracycline"
+      ],
+      "organic": [
+        "Bacillus subtilis products",
+        "Garlic extract sprays",
+        "Compost tea applications"
+      ],
+      "cultural": [
+        "Increase plant spacing",
+        "Morning watering only",
+        "Remove infected leaves promptly"
+      ]
+    },
+    "recommendedProducts": [
+      "Bonide Copper Fungicide",
+      "Southern Ag Liquid Copper",
+      "Serenade Garden Disease Control"
+    ],
+    "spreadingConditions": [
+      "Cool, wet weather",
+      "High humidity",
+      "Frequent rainfall or overhead irrigation",
+      "Poor air circulation"
+    ]
+  },
+  {
+    "name": "Tomato mold leaf",
+    "cropAffected": "Tomato",
+    "scientificName": "Fulvia fulva",
+    "detailedDescription": "Leaf mold is a fungal disease that primarily affects greenhouse-grown tomatoes. It thrives in high humidity and can cause significant defoliation if not managed properly.",
+    "symptoms": [
+      "Yellow spots on upper leaf surfaces",
+      "Velvety gray or brown mold on undersides",
+      "Leaf curling and wilting",
+      "Premature defoliation",
+      "Reduced fruit yield"
+    ],
+    "causes": [
+      "High humidity (>85%)",
+      "Poor air circulation",
+      "Overcrowded plants",
+      "Infected plant debris"
+    ],
+    "prevention": [
+      "Maintain proper air circulation",
+      "Reduce humidity levels",
+      "Use resistant varieties",
+      "Avoid overhead irrigation",
+      "Remove plant debris"
+    ],
+    "treatment": {
+      "chemical": ["Chlorothalonil", "Mancozeb", "Copper-based fungicides"],
+      "organic": ["Baking soda sprays", "Neem oil", "Potassium bicarbonate"],
+      "cultural": [
+        "Increase plant spacing",
+        "Prune for better airflow",
+        "Morning watering only"
+      ]
+    },
+    "recommendedProducts": [
+      "Daconil Weather Stik",
+      "Bonide Copper Fungicide",
+      "Garden Safe Fungicide 3"
+    ],
+    "spreadingConditions": [
+      "High humidity (>85%)",
+      "Poor air circulation",
+      "Overcrowded plants",
+      "Frequent rainfall or overhead irrigation"
+    ]
+  },
+  {
+    "name": "Tomato leaf",
+    "cropAffected": "Tomato",
+    "scientificName": "N/A",
+    "detailedDescription": "This entry refers to general leaf-related issues in tomatoes, which can include nutrient deficiencies, environmental stress, or early signs of disease.",
+    "symptoms": [
+      "Yellowing or browning of leaves",
+      "Leaf curling or distortion",
+      "Spots or lesions on leaves",
+      "Premature leaf drop",
+      "Stunted growth"
+    ],
+    "causes": [
+      "Nutrient deficiencies",
+      "Environmental stress",
+      "Early signs of disease",
+      "Pest damage"
+    ],
+    "prevention": [
+      "Maintain balanced nutrition",
+      "Monitor for pests and diseases",
+      "Provide adequate water",
+      "Ensure proper spacing"
+    ],
+    "treatment": {
+      "chemical": [
+        "Fungicides if disease is present",
+        "Insecticides if pests are present"
+      ],
+      "organic": [
+        "Compost tea",
+        "Neem oil",
+        "Epsom salt for magnesium deficiency"
+      ],
+      "cultural": [
+        "Adjust watering practices",
+        "Improve soil fertility",
+        "Remove affected leaves"
+      ]
+    },
+    "recommendedProducts": ["Neem oil", "Epsom salt", "Compost tea"],
+    "spreadingConditions": [
+      "Poor soil fertility",
+      "Environmental stress",
+      "Pest or disease presence"
+    ]
+  },
+  {
+    "name": "Tomato leafs",
+    "cropAffected": "Tomato",
+    "scientificName": "N/A",
+    "detailedDescription": "This entry refers to multiple leaf-related issues in tomatoes, which can include nutrient deficiencies, environmental stress, or early signs of disease.",
+    "symptoms": [
+      "Yellowing or browning of leaves",
+      "Leaf curling or distortion",
+      "Spots or lesions on leaves",
+      "Premature leaf drop",
+      "Stunted growth"
+    ],
+    "causes": [
+      "Nutrient deficiencies",
+      "Environmental stress",
+      "Early signs of disease",
+      "Pest damage"
+    ],
+    "prevention": [
+      "Maintain balanced nutrition",
+      "Monitor for pests and diseases",
+      "Provide adequate water",
+      "Ensure proper spacing"
+    ],
+    "treatment": {
+      "chemical": [
+        "Fungicides if disease is present",
+        "Insecticides if pests are present"
+      ],
+      "organic": [
+        "Compost tea",
+        "Neem oil",
+        "Epsom salt for magnesium deficiency"
+      ],
+      "cultural": [
+        "Adjust watering practices",
+        "Improve soil fertility",
+        "Remove affected leaves"
+      ]
+    },
+    "recommendedProducts": ["Neem oil", "Epsom salt", "Compost tea"],
+    "spreadingConditions": [
+      "Poor soil fertility",
+      "Environmental stress",
+      "Pest or disease presence"
+    ]
+  },
+  {
+    "name": "Grape leaf black rot",
+    "cropAffected": "Grape",
+    "scientificName": "Guignardia bidwellii",
+    "detailedDescription": "Black rot is a fungal disease that affects grapevines, causing significant damage to leaves, stems, and fruit. It is most prevalent in warm, humid climates.",
+    "symptoms": [
+      "Brown spots with black edges on leaves",
+      "Black, mummified fruit",
+      "Leaf yellowing and defoliation",
+      "Dark lesions on stems",
+      "Reduced fruit yield"
+    ],
+    "causes": [
+      "Infected plant debris",
+      "Warm, humid weather",
+      "Spread through rain splash",
+      "Poor air circulation"
+    ],
+    "prevention": [
+      "Remove infected plant debris",
+      "Prune for better airflow",
+      "Use resistant varieties",
+      "Apply fungicides preventatively"
+    ],
+    "treatment": {
+      "chemical": ["Mancozeb", "Captan", "Myclobutanil"],
+      "organic": [
+        "Copper-based fungicides",
+        "Sulfur sprays",
+        "Baking soda solutions"
+      ],
+      "cultural": [
+        "Prune infected parts",
+        "Improve air circulation",
+        "Remove fallen leaves and fruit"
+      ]
+    },
+    "recommendedProducts": [
+      "Mancozeb Fungicide",
+      "Bonide Copper Fungicide",
+      "Southern Ag Captan Fungicide"
+    ],
+    "spreadingConditions": [
+      "Warm, humid weather",
+      "Frequent rainfall",
+      "Poor air circulation",
+      "Infected plant debris"
+    ]
+  },
+  {
+    "name": "Grape leaf",
+    "cropAffected": "Grape",
+    "scientificName": "N/A",
+    "detailedDescription": "This entry refers to general leaf-related issues in grapevines, which can include nutrient deficiencies, environmental stress, or early signs of disease.",
+    "symptoms": [
+      "Yellowing or browning of leaves",
+      "Leaf curling or distortion",
+      "Spots or lesions on leaves",
+      "Premature leaf drop",
+      "Stunted growth"
+    ],
+    "causes": [
+      "Nutrient deficiencies",
+      "Environmental stress",
+      "Early signs of disease",
+      "Pest damage"
+    ],
+    "prevention": [
+      "Maintain balanced nutrition",
+      "Monitor for pests and diseases",
+      "Provide adequate water",
+      "Ensure proper spacing"
+    ],
+    "treatment": {
+      "chemical": [
+        "Fungicides if disease is present",
+        "Insecticides if pests are present"
+      ],
+      "organic": [
+        "Compost tea",
+        "Neem oil",
+        "Epsom salt for magnesium deficiency"
+      ],
+      "cultural": [
+        "Adjust watering practices",
+        "Improve soil fertility",
+        "Remove affected leaves"
+      ]
+    },
+    "recommendedProducts": ["Neem oil", "Epsom salt", "Compost tea"],
+    "spreadingConditions": [
+      "Poor soil fertility",
+      "Environmental stress",
+      "Pest or disease presence"
+    ]
+  },
+  {
+    "name": "Corn leaf blight",
+    "cropAffected": "Corn",
+    "scientificName": "Exserohilum turcicum",
+    "detailedDescription": "Northern corn leaf blight is a fungal disease that causes large, cigar-shaped lesions on corn leaves. It can lead to significant yield loss if not managed properly.",
+    "symptoms": [
+      "Large, grayish-green lesions on leaves",
+      "Lesions with dark borders",
+      "Premature leaf death",
+      "Reduced ear size",
+      "Stunted growth"
+    ],
+    "causes": [
+      "Infected crop residue",
+      "Warm, humid weather",
+      "Spread through wind and rain",
+      "Susceptible varieties"
+    ],
+    "prevention": [
+      "Use resistant varieties",
+      "Practice crop rotation",
+      "Remove crop residue",
+      "Apply fungicides preventatively"
+    ],
+    "treatment": {
+      "chemical": ["Azoxystrobin", "Propiconazole", "Pyraclostrobin"],
+      "organic": [
+        "Copper-based fungicides",
+        "Baking soda solutions",
+        "Neem oil"
+      ],
+      "cultural": [
+        "Remove infected leaves",
+        "Improve air circulation",
+        "Avoid overhead irrigation"
+      ]
+    },
+    "recommendedProducts": [
+      "Quadris Fungicide",
+      "Propiconazole Fungicide",
+      "Bonide Copper Fungicide"
+    ],
+    "spreadingConditions": [
+      "Warm, humid weather",
+      "Frequent rainfall",
+      "Poor air circulation",
+      "Infected crop residue"
+    ]
+  }
+]

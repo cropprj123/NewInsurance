@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from "react";
 import { Link, Routes, Route } from "react-router-dom";
+import axios from "axios";
 import {
   Upload,
   AlertCircle,
@@ -12,14 +13,13 @@ import {
   Sprout,
   BarChart3,
 } from "lucide-react";
-import axios from "axios";
 
-// Crop Disease Detection Component
 const DiseaseDetection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [prediction, setPrediction] = useState("");
+  const [prediction, setPrediction] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -44,13 +44,13 @@ const DiseaseDetection = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          params: {
+            lang: selectedLanguage,
+          },
         }
       );
 
-      console.log(response.data.predictions[0]);
-      setPrediction(
-        response.data.predictions[0].disease || "No prediction available"
-      );
+      setPrediction(response.data.predictions[0]);
     } catch (error) {
       console.error("Error detecting crop disease:", error);
       setError("Failed to detect crop disease. Please try again.");
@@ -149,7 +149,7 @@ const DiseaseDetection = () => {
                     <h3 className="font-semibold text-green-800">
                       Analysis Result
                     </h3>
-                    <p className="text-green-600">{prediction}</p>
+                    <p className="text-green-600">{prediction.disease}</p>
                   </div>
                 </div>
               )}
@@ -176,12 +176,190 @@ const DiseaseDetection = () => {
               )}
             </div>
           </div>
+
+          {/* Language Selection Dropdown */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Language
+            </label>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              <option value="en">English</option>
+              <option value="mr">मराठी</option>
+              <option value="hi">हिंदी</option>
+              <option value="gu">ગુજરાતી</option>
+              <option value="de">German</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
         </div>
       </div>
+
+      {prediction && (
+        <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {prediction.disease}
+            </h2>
+            <p className="mt-2 text-gray-600">
+              {prediction.info.scientificName}
+            </p>
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-gray-800">
+                {prediction.info.detailedDescription}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Causes Section */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Causes
+              </h3>
+              <ul className="list-disc list-inside text-gray-600 space-y-2">
+                {prediction.info.causes.map((cause, index) => (
+                  <li key={index} className="p-3 bg-gray-50 rounded-lg">
+                    {cause}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Spreading Conditions */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                Spreading Conditions
+              </h3>
+              <ul className="list-disc list-inside text-gray-600 space-y-2">
+                {prediction.info.spreadingConditions.map((condition, index) => (
+                  <li key={index} className="p-3 bg-gray-50 rounded-lg">
+                    {condition}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Crop Info Section */}
+          <div className="mt-6 grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-green-50 rounded-lg">
+              <h4 className="text-lg font-semibold text-gray-800">
+                Affected Crop
+              </h4>
+              <p className="mt-2 text-gray-600">
+                {prediction.info.cropAffected}
+              </p>
+            </div>
+            <div className="p-4 bg-yellow-50 rounded-lg">
+              <h4 className="text-lg font-semibold text-gray-800">
+                Scientific Name
+              </h4>
+              <p className="mt-2 text-gray-600">
+                {prediction.info.scientificName}
+              </p>
+            </div>
+          </div>
+
+          {/* Existing Symptoms and Prevention Sections */}
+          {/* ... Keep previous symptoms and prevention sections here ... */}
+
+          {/* Updated Treatment Section with Cultural Methods */}
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Treatment Options
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Chemical Treatments */}
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                  Chemical
+                </h4>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  {prediction.info.treatment.chemical.map(
+                    (treatment, index) => (
+                      <li key={index} className="p-3 bg-gray-50 rounded-lg">
+                        {treatment}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+
+              {/* Cultural Practices */}
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                  Cultural
+                </h4>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  {prediction.info.treatment.cultural.map((practice, index) => (
+                    <li key={index} className="p-3 bg-gray-50 rounded-lg">
+                      {practice}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Organic Treatments */}
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                  Organic
+                </h4>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  {prediction.info.treatment.organic.map((treatment, index) => (
+                    <li key={index} className="p-3 bg-gray-50 rounded-lg">
+                      {treatment}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Prevention Section */}
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Prevention
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              {prediction.info.prevention.map((measure, index) => (
+                <div
+                  key={index}
+                  className="p-4 bg-gray-50 rounded-lg flex items-start"
+                >
+                  <span className="text-green-600 mr-2">✓</span>
+                  <p className="text-gray-800">{measure}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recommended Products Section */}
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
+              Recommended Products
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {prediction.info.recommendedProducts.map((product, index) => (
+                <div
+                  key={index}
+                  className="p-4 bg-gray-50 rounded-lg border border-green-200 flex items-center"
+                >
+                  <ShoppingCart className="w-5 h-5 text-green-600 mr-3" />
+                  <p className="text-gray-800">{product}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
-
 // Soil Analysis Component
 const SoilAnalysis = () => {
   const [loading, setLoading] = useState(false);
