@@ -11,12 +11,14 @@ const AdminDashboard = () => {
   // Fetch farmers data from the API
   useEffect(() => {
     const fetchFarmers = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:3000/api/v1/farm");
+      try
+      {
+        const response = await axios.get("/api/v1/farm");
         console.log("res", response);
         setFarmers(response.data.data.farmers); // Assuming the API response is an array of farmers
         setLoading(false);
-      } catch (err) {
+      } catch (err)
+      {
         setError("Failed to load farmers data");
         setLoading(false);
       }
@@ -29,11 +31,13 @@ const AdminDashboard = () => {
     navigate(`/profile/farmer-profile/${id}`); // Use the farmer's ID for dynamic routing
   };
 
-  if (loading) {
+  if (loading)
+  {
     return <div>Loading farmers data...</div>;
   }
 
-  if (error) {
+  if (error)
+  {
     return <div className="text-red-600">{error}</div>;
   }
 
