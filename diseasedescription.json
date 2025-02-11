@@ -530,52 +530,130 @@
     ]
   },
   {
-    "name": "Grape leaf black rot",
+    "name": "Grape Leaf Black Rot",
     "cropAffected": "Grape",
     "scientificName": "Guignardia bidwellii",
-    "detailedDescription": "Black rot is a fungal disease that affects grapevines, causing significant damage to leaves, stems, and fruit. It is most prevalent in warm, humid climates.",
+    "detailedDescription": "Black rot is a fungal disease that severely affects grapevines, causing significant yield loss. It primarily infects leaves, stems, and fruit, leading to premature defoliation and fruit rot. The disease thrives in warm, humid climates and can overwinter in infected plant debris.",
     "symptoms": [
-      "Brown spots with black edges on leaves",
-      "Black, mummified fruit",
-      "Leaf yellowing and defoliation",
-      "Dark lesions on stems",
-      "Reduced fruit yield"
+      "Small, reddish-brown spots on leaves that enlarge and develop black margins",
+      "Circular lesions with dark pycnidia (fruiting bodies) in the center",
+      "Leaf yellowing and premature defoliation",
+      "Infected berries shrivel and turn into hard, black mummies",
+      "Stem lesions causing cankers and dieback"
     ],
     "causes": [
-      "Infected plant debris",
-      "Warm, humid weather",
-      "Spread through rain splash",
-      "Poor air circulation"
+      "Fungal pathogen Guignardia bidwellii",
+      "Overwintering in infected plant debris and mummified fruit",
+      "Spread through rain splash and wind",
+      "High humidity and temperatures between 60-90°F (15-32°C)",
+      "Poor air circulation in dense canopies",
+      "Prolonged leaf wetness"
     ],
     "prevention": [
-      "Remove infected plant debris",
-      "Prune for better airflow",
-      "Use resistant varieties",
-      "Apply fungicides preventatively"
+      "Remove and destroy infected plant debris and mummified fruit",
+      "Prune vines to improve air circulation",
+      "Apply fungicides during critical growth stages",
+      "Use resistant grape varieties",
+      "Avoid overhead irrigation",
+      "Practice crop rotation",
+      "Monitor vines regularly for early signs of infection"
     ],
     "treatment": {
-      "chemical": ["Mancozeb", "Captan", "Myclobutanil"],
-      "organic": [
+      "chemical": [
+        "Mancozeb for protective coverage",
+        "Azoxystrobin for systemic control",
         "Copper-based fungicides",
-        "Sulfur sprays",
-        "Baking soda solutions"
+        "Captan for fruit protection",
+        "Myclobutanil for curative treatment"
+      ],
+      "organic": [
+        "Copper sulfate sprays",
+        "Neem oil applications",
+        "Potassium bicarbonate",
+        "Bacillus subtilis biological fungicide"
       ],
       "cultural": [
-        "Prune infected parts",
-        "Improve air circulation",
-        "Remove fallen leaves and fruit"
+        "Prune and train vines for better airflow",
+        "Remove and destroy infected plant parts",
+        "Use drip irrigation to avoid leaf wetness",
+        "Apply mulch to reduce soil splash"
       ]
     },
     "recommendedProducts": [
       "Mancozeb Fungicide",
-      "Bonide Copper Fungicide",
-      "Southern Ag Captan Fungicide"
+      "Copper Fungicide",
+      "Neem Oil",
+      "Serenade Garden Disease Control",
+      "Captan Fungicide"
     ],
     "spreadingConditions": [
-      "Warm, humid weather",
-      "Frequent rainfall",
-      "Poor air circulation",
-      "Infected plant debris"
+      "Warm temperatures (60-90°F or 15-32°C)",
+      "High humidity and prolonged leaf wetness",
+      "Rain splash and wind dispersal",
+      "Overcrowded vines with poor air circulation",
+      "Presence of infected plant debris"
+    ]
+  },
+  {
+    "name": "Bell Pepper Leaf Spot",
+    "cropAffected": "Bell Pepper",
+    "scientificName": "Xanthomonas campestris pv. vesicatoria",
+    "detailedDescription": "Bell pepper leaf spot, caused by the bacterium Xanthomonas campestris, is a common disease that affects pepper plants. It leads to leaf spots, defoliation, and reduced fruit quality. The disease spreads rapidly in warm, wet conditions and can persist in plant debris and seeds.",
+    "symptoms": [
+      "Small, water-soaked spots on leaves that turn brown or black",
+      "Spots with yellow halos that coalesce into larger lesions",
+      "Leaf yellowing and premature defoliation",
+      "Lesions on stems and fruit",
+      "Reduced plant vigor and fruit yield"
+    ],
+    "causes": [
+      "Bacterial pathogen Xanthomonas campestris pv. vesicatoria",
+      "Spread through water splash, contaminated tools, and seeds",
+      "Warm temperatures (75-85°F or 24-29°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation",
+      "Infected plant debris and weeds"
+    ],
+    "prevention": [
+      "Use disease-free seeds and transplants",
+      "Avoid overhead irrigation",
+      "Practice crop rotation with non-solanaceous crops",
+      "Remove and destroy infected plant debris",
+      "Apply copper-based fungicides preventively",
+      "Maintain proper plant spacing for air circulation"
+    ],
+    "treatment": {
+      "chemical": [
+        "Copper-based fungicides",
+        "Streptomycin sulfate",
+        "Mancozeb for protective coverage",
+        "Oxytetracycline for bacterial control"
+      ],
+      "organic": [
+        "Copper sulfate sprays",
+        "Neem oil applications",
+        "Bacillus subtilis biological fungicide",
+        "Compost tea sprays"
+      ],
+      "cultural": [
+        "Remove and destroy infected leaves",
+        "Use drip irrigation",
+        "Prune plants for better airflow",
+        "Apply mulch to reduce soil splash"
+      ]
+    },
+    "recommendedProducts": [
+      "Bonide Copper Fungicide",
+      "Southern Ag Streptomycin Sulfate",
+      "Serenade Garden Disease Control",
+      "Neem Oil"
+    ],
+    "spreadingConditions": [
+      "Warm temperatures (75-85°F or 24-29°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation",
+      "Infected plant debris and seeds",
+      "Poor air circulation"
     ]
   },
   {
@@ -626,52 +704,188 @@
     ]
   },
   {
-    "name": "Corn leaf blight",
+    "name": "Corn Leaf Blight",
     "cropAffected": "Corn",
     "scientificName": "Exserohilum turcicum",
-    "detailedDescription": "Northern corn leaf blight is a fungal disease that causes large, cigar-shaped lesions on corn leaves. It can lead to significant yield loss if not managed properly.",
+    "detailedDescription": "Northern corn leaf blight is a fungal disease that causes elongated, gray-green lesions on corn leaves. It can lead to significant yield loss if not managed properly.",
     "symptoms": [
-      "Large, grayish-green lesions on leaves",
-      "Lesions with dark borders",
+      "Long, elliptical lesions on leaves",
+      "Lesions start as gray-green and turn tan or brown",
+      "Lesions may coalesce, causing large areas of dead tissue",
       "Premature leaf death",
-      "Reduced ear size",
-      "Stunted growth"
+      "Reduced ear size and yield"
     ],
     "causes": [
-      "Infected crop residue",
-      "Warm, humid weather",
-      "Spread through wind and rain",
-      "Susceptible varieties"
+      "Fungal pathogen Exserohilum turcicum",
+      "Overwintering in infected plant debris",
+      "Spread through wind and rain splash",
+      "Cool, wet weather",
+      "High humidity",
+      "Poor air circulation"
     ],
     "prevention": [
-      "Use resistant varieties",
+      "Use resistant corn varieties",
       "Practice crop rotation",
-      "Remove crop residue",
-      "Apply fungicides preventatively"
+      "Remove and destroy infected plant debris",
+      "Avoid overhead irrigation",
+      "Apply fungicides preventively"
     ],
     "treatment": {
-      "chemical": ["Azoxystrobin", "Propiconazole", "Pyraclostrobin"],
+      "chemical": [
+        "Azoxystrobin",
+        "Propiconazole",
+        "Tebuconazole",
+        "Pyraclostrobin"
+      ],
       "organic": [
         "Copper-based fungicides",
-        "Baking soda solutions",
-        "Neem oil"
+        "Sulfur sprays",
+        "Neem oil",
+        "Bacillus subtilis"
       ],
       "cultural": [
-        "Remove infected leaves",
-        "Improve air circulation",
+        "Pruning to improve airflow",
+        "Using drip irrigation",
+        "Sanitation practices",
+        "Companion planting"
+      ]
+    },
+    "recommendedProducts": [
+      "Azoxystrobin Fungicide",
+      "Propiconazole Fungicide",
+      "Bonide Copper Fungicide",
+      "Neem Oil"
+    ],
+    "spreadingConditions": [
+      "Cool, wet weather",
+      "High humidity",
+      "Overhead irrigation",
+      "Poor air circulation",
+      "Infected plant debris"
+    ]
+  },
+  {
+    "name": "Potato Leaf Late Blight",
+    "cropAffected": "Potato",
+    "scientificName": "Phytophthora infestans",
+    "detailedDescription": "Late blight is a devastating fungal-like disease caused by Phytophthora infestans, affecting potato plants worldwide. It causes rapid defoliation, stem lesions, and tuber rot. The disease thrives in cool, wet conditions and can spread rapidly in favorable environments.",
+    "symptoms": [
+      "Water-soaked lesions on leaves that turn brown and necrotic",
+      "White, fuzzy sporulation on the underside of leaves",
+      "Lesions on stems and tubers",
+      "Rapid defoliation",
+      "Tuber rot and shriveling"
+    ],
+    "causes": [
+      "Oomycete pathogen Phytophthora infestans",
+      "Overwintering in infected plant debris and tubers",
+      "Spread through wind, rain, and contaminated tools",
+      "Cool temperatures (60-75°F or 15-24°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation"
+    ],
+    "prevention": [
+      "Use disease-free seeds and transplants",
+      "Practice crop rotation with non-solanaceous crops",
+      "Remove and destroy infected plant debris",
+      "Apply fungicides preventively",
+      "Maintain proper plant spacing",
+      "Avoid overhead irrigation"
+    ],
+    "treatment": {
+      "chemical": [
+        "Chlorothalonil (Daconil)",
+        "Mancozeb for protective coverage",
+        "Azoxystrobin for systemic control",
+        "Copper-based fungicides"
+      ],
+      "organic": [
+        "Copper sulfate sprays",
+        "Neem oil applications",
+        "Potassium bicarbonate",
+        "Bacillus subtilis biological fungicide"
+      ],
+      "cultural": [
+        "Remove and destroy infected leaves",
+        "Prune plants for better airflow",
+        "Apply mulch to reduce soil splash",
         "Avoid overhead irrigation"
       ]
     },
     "recommendedProducts": [
-      "Quadris Fungicide",
-      "Propiconazole Fungicide",
-      "Bonide Copper Fungicide"
+      "Daconil Weather Stik",
+      "Bonide Copper Fungicide",
+      "Serenade Garden Disease Control",
+      "Neem Oil"
     ],
     "spreadingConditions": [
-      "Warm, humid weather",
-      "Frequent rainfall",
-      "Poor air circulation",
-      "Infected crop residue"
+      "Cool temperatures (60-75°F or 15-24°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation",
+      "Infected plant debris",
+      "Poor air circulation"
+    ]
+  },
+  {
+    "name": "Apple Scab Leaf",
+    "cropAffected": "Apple",
+    "scientificName": "Venturia inaequalis",
+    "detailedDescription": "Apple scab is a fungal disease caused by Venturia inaequalis, affecting apple trees worldwide. It causes leaf spots, defoliation, and reduced fruit quality. The disease thrives in cool, wet conditions and can persist in infected leaves and fruit.",
+    "symptoms": [
+      "Olive-green to black spots on leaves",
+      "Spots with velvety texture on the underside of leaves",
+      "Leaf yellowing and premature defoliation",
+      "Lesions on fruit, causing cracking and deformation",
+      "Reduced fruit quality and yield"
+    ],
+    "causes": [
+      "Fungal pathogen Venturia inaequalis",
+      "Overwintering in infected leaves and fruit",
+      "Spread through wind and rain splash",
+      "Cool temperatures (50-75°F or 10-24°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation"
+    ],
+    "prevention": [
+      "Use resistant apple varieties",
+      "Practice crop rotation with non-host crops",
+      "Remove and destroy infected leaves and fruit",
+      "Apply fungicides preventively",
+      "Maintain proper tree spacing",
+      "Avoid overhead irrigation"
+    ],
+    "treatment": {
+      "chemical": [
+        "Chlorothalonil (Daconil)",
+        "Mancozeb for protective coverage",
+        "Myclobutanil for systemic control",
+        "Copper-based fungicides"
+      ],
+      "organic": [
+        "Copper sulfate sprays",
+        "Neem oil applications",
+        "Potassium bicarbonate",
+        "Bacillus subtilis biological fungicide"
+      ],
+      "cultural": [
+        "Remove and destroy infected leaves and fruit",
+        "Prune trees for better airflow",
+        "Apply mulch to reduce soil splash",
+        "Avoid overhead irrigation"
+      ]
+    },
+    "recommendedProducts": [
+      "Daconil Weather Stik",
+      "Bonide Copper Fungicide",
+      "Serenade Garden Disease Control",
+      "Neem Oil"
+    ],
+    "spreadingConditions": [
+      "Cool temperatures (50-75°F or 10-24°C)",
+      "High humidity and prolonged leaf wetness",
+      "Overhead irrigation",
+      "Infected leaves and fruit",
+      "Poor air circulation"
     ]
   }
 ]

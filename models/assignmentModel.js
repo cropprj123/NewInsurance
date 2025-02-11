@@ -30,6 +30,10 @@ const insuranceAssignmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    visitDate: {
+      type: Date,
+      default: null,
+    },
     region: {
       state: {
         type: String,
@@ -51,11 +55,6 @@ const insuranceAssignmentSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
-// insuranceAssignmentSchema.pre("save", function (next) {
-
-//   next();
-// });
 
 insuranceAssignmentSchema.statics.findAvailableAgentsInRegion = async function (
   state,

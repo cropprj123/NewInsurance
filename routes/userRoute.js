@@ -11,4 +11,14 @@ router.get("/logout", authController.logout);
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
 router.get("/user", authController.user);
+router.patch(
+  "/updateme",
+  userController.resizeUserImage,
+  userController.updateme
+);
+router.patch("/updateMyPassword", authController.updatePassword);
+router.use(authController.protect);
+router.use(authController.restrictTo("admin"));
+
+router.route("/").get(userController.getalluser);
 module.exports = router;

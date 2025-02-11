@@ -99,7 +99,7 @@ exports.getdetails = catchAsync(async (req, res, next) => {
 });
 
 exports.getalluser = catchAsync(async (req, res, next) => {
-  const doc = await User.find().populate("products");
+  const doc = await User.find();
 
   if (!doc) {
     return next(new AppError("sorry there are no user for ur website", 404));

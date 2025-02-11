@@ -1,4 +1,4 @@
-const { InsurancePolicy } = require("../models/insuranceModel");
+const InsurancePolicy = require("../models/insuranceModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 exports.createPolicy = catchAsync(async (req, res, next) => {

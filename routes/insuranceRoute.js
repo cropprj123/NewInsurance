@@ -7,7 +7,7 @@ const router = express.Router();
 router.route("/").get(insurancePolicyController.getAllPolicies);
 router.route("/:id").get(insurancePolicyController.getPolicy);
 
-router.use(authController.protect, authController.restrictTo("admin"));
+router.use(authController.protect, authController.restrictTo("admin", "agent"));
 
 router.route("/").post(insurancePolicyController.createPolicy);
 

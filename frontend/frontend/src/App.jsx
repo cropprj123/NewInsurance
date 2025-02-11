@@ -12,6 +12,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import InsuranceDetail from "./components/InsuranceDetail";
 import AssignAgents from "./components/DashboardComponents/AssignAgents";
 import FeaturesPage from "./page/FeaturePage"; // Import the FeaturesPage component
+import Location from "./page/Aboutus";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signin" element={<SigninPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/about-us" element={<Location />} />
             <Route path="/insurance" element={<Insurance />} />
             <Route path="/insurance/:id" element={<InsuranceDetail />} />
             {/* Updated Features routes */}
