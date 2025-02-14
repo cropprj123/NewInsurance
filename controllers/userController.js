@@ -12,9 +12,11 @@ dotenv.config({ path: "./config.env" });
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 const multerFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
+  if (file.mimetype.startsWith("image"))
+  {
     cb(null, true);
-  } else {
+  } else
+  {
     cb(new AppError("not an image!! please upload an image", 400));
   }
 };
@@ -37,12 +39,14 @@ cloudinary.config({
 });
 exports.resizeUserImage = catchAsync(async (req, res, next) => {
   upload.single("photo")(req, res, async (err) => {
-    if (err) {
+    if (err)
+    {
       return next(new AppError("Failed to upload image.", 400));
     }
 
     // Check if req.file exists
-    if (!req.file) {
+    if (!req.file)
+    {
       return next();
     }
 
@@ -56,7 +60,8 @@ exports.resizeUserImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(resizedImagePath);
 
-    try {
+    try
+    {
       const result = await cloudinary.uploader.upload(resizedImagePath, {
         resource_type: "auto",
       });
@@ -67,7 +72,8 @@ exports.resizeUserImage = catchAsync(async (req, res, next) => {
 
       // Call next middleware
       next();
-    } catch (err) {
+    } catch (err)
+    {
       return next();
     }
   });
@@ -77,12 +83,15 @@ exports.getdetails = catchAsync(async (req, res, next) => {
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
-  ) {
+  )
+  {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.jwt) {
+  } else if (req.cookies.jwt)
+  {
     token = req.cookies.jwt;
   }
-  if (!token) {
+  if (!token)
+  {
     res.status(200).json({
       status: "fail",
       user: "no user",
@@ -99,9 +108,10 @@ exports.getdetails = catchAsync(async (req, res, next) => {
 });
 
 exports.getalluser = catchAsync(async (req, res, next) => {
-  const doc = await User.find().populate("products");
+  const doc = await User.find();
 
-  if (!doc) {
+  if (!doc)
+  {
     return next(new AppError("sorry there are no user for ur website", 404));
   }
 
@@ -116,7 +126,8 @@ exports.getalluser = catchAsync(async (req, res, next) => {
 const filterObj = (obj, ...AllowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
-    if (AllowedFields.includes(el)) {
+    if (AllowedFields.includes(el))
+    {
       newObj[el] = obj[el];
     }
   });
@@ -126,7 +137,8 @@ exports.updateme = catchAsync(async (req, res, next) => {
   console.log(req.file);
   console.log(JSON.stringify(req.body));
 
-  if (req.body.password || req.body.passwordConfirm) {
+  if (req.body.password || req.body.passwordConfirm)
+  {
     return next(
       new AppError(
         "do not insert the password here this is not the correct route please go on updatePassword route !! Thankuuuuuu",
@@ -146,6 +158,38 @@ exports.updateme = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       user: updateUser,
+    },
+  });
+});
+exports.searchUser = catchAsync(async (req, res, next) => {
+  const { q } = req.query;
+
+  if (!q)
+  {
+    return next(new AppError("Please provide a search query.", 400));
+  }
+
+  const users = await User.find({
+    $or: [
+      { name: { $regex: q, $options: "i" } },
+      { email: { $regex: q, $options: "i" } },
+    ],
+  });
+
+  if (users.length === 0)
+  {
+    return res.status(200).json({
+      status: "success",
+      message: "No users found matching your search.",
+      data: [],
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    results: users.length,
+    data: {
+      users,
     },
   });
 });

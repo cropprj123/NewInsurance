@@ -1,4 +1,4 @@
-const { InsurancePolicy } = require("../models/insuranceModel");
+const InsurancePolicy = require("../models/insuranceModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 exports.createPolicy = catchAsync(async (req, res, next) => {
@@ -30,7 +30,8 @@ exports.getAllPolicies = catchAsync(async (req, res, next) => {
 exports.getPolicy = catchAsync(async (req, res, next) => {
   const policy = await InsurancePolicy.findById(req.params.id);
 
-  if (!policy) {
+  if (!policy)
+  {
     return next(new AppError("No policy found with that ID", 404));
   }
 
@@ -46,11 +47,13 @@ exports.getPolicy = catchAsync(async (req, res, next) => {
 exports.updatePolicy = catchAsync(async (req, res, next) => {
   const policy = await InsurancePolicy.findById(req.params.id);
 
-  if (!policy) {
+  if (!policy)
+  {
     return next(new AppError("No policy found with that ID", 404));
   }
 
-  if (policy.createdBy.toString() !== req.user.id) {
+  if (policy.createdBy.toString() !== req.user.id)
+  {
     return next(
       new AppError("You do not have permission to update this policy", 403)
     );
@@ -75,11 +78,13 @@ exports.updatePolicy = catchAsync(async (req, res, next) => {
 exports.deletePolicy = catchAsync(async (req, res, next) => {
   const policy = await InsurancePolicy.findById(req.params.id);
 
-  if (!policy) {
+  if (!policy)
+  {
     return next(new AppError("No policy found with that ID", 404));
   }
 
-  if (policy.createdBy.toString() !== req.user.id) {
+  if (policy.createdBy.toString() !== req.user.id)
+  {
     return next(
       new AppError("You do not have permission to delete this policy", 403)
     );

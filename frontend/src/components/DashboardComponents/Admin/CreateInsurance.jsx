@@ -46,8 +46,6 @@ const CreateInsurance = () => {
         cropCategory: '',
         crops: [{
             cropType: '',
-            sumInsured: '',
-            premium: ''
         }]
     }]);
 
@@ -88,12 +86,7 @@ const CreateInsurance = () => {
             case 2:
                 return cropDetails.every(category =>
                     category.cropCategory &&
-                    category.crops.every(crop =>
-                        crop.cropType &&
-                        crop.sumInsured &&
-                        crop.premium
-
-                    )
+                    category.crops.length > 0
                 );
             case 3:
                 return (

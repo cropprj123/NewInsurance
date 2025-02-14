@@ -1,4 +1,3 @@
-// CropDetailsForm.jsx
 const CropDetailsForm = ({ cropDetails, setCropDetails, errors }) => {
     const cropCategories = {
         Cereals: ["Wheat", "Rice", "Maize", "Barley", "Sorghum"],
@@ -15,32 +14,26 @@ const CropDetailsForm = ({ cropDetails, setCropDetails, errors }) => {
             ...cropDetails,
             {
                 cropCategory: '',
-                crops: [{
-                    cropType: '',
-                    sumInsured: '',
-                    premium: ''
-                }]
+                crops: []
             }
         ]);
-    };
-
-    const addCropToCategoryDetails = (categoryIndex) => {
-        const newCropDetails = [...cropDetails];
-        newCropDetails[categoryIndex].crops.push({
-            cropType: '',
-            sumInsured: '',
-            premium: ''
-        });
-        setCropDetails(newCropDetails);
     };
 
     const removeCropCategory = (index) => {
         setCropDetails(cropDetails.filter((_, i) => i !== index));
     };
 
-    const removeCrop = (categoryIndex, cropIndex) => {
+    const handleCropSelection = (categoryIndex, cropType, isSelected) => {
         const newCropDetails = [...cropDetails];
-        newCropDetails[categoryIndex].crops = newCropDetails[categoryIndex].crops.filter((_, i) => i !== cropIndex);
+        if (isSelected)
+        {
+            newCropDetails[categoryIndex].crops.push({ cropType });
+        } else
+        {
+            newCropDetails[categoryIndex].crops = newCropDetails[categoryIndex].crops.filter(
+                crop => crop.cropType !== cropType
+            );
+        }
         setCropDetails(newCropDetails);
     };
 
@@ -74,11 +67,7 @@ const CropDetailsForm = ({ cropDetails, setCropDetails, errors }) => {
                                 onChange={(e) => {
                                     const newCropDetails = [...cropDetails];
                                     newCropDetails[categoryIndex].cropCategory = e.target.value;
-                                    newCropDetails[categoryIndex].crops = [{
-                                        cropType: '',
-                                        sumInsured: '',
-                                        premium: ''
-                                    }];
+                                    newCropDetails[categoryIndex].crops = [];
                                     setCropDetails(newCropDetails);
                                 }}
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-mycol-mint focus:border-transparent"
@@ -90,99 +79,55 @@ const CropDetailsForm = ({ cropDetails, setCropDetails, errors }) => {
                             </select>
                         </div>
 
-                        {/* Crops in Category */}
+                        {/* Crops Selection */}
                         {category.cropCategory && (
-                            <div className="space-y-4">
-                                {category.crops.map((crop, cropIndex) => (
-                                    <div key={cropIndex} className="border border-gray-200 rounded-lg p-4">
-                                        <div className="flex justify-between items-center mb-4">
-                                            <h4 className="text-sm font-medium text-gray-700">
-                                                Crop {cropIndex + 1}
-                                            </h4>
-                                            {category.crops.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeCrop(categoryIndex, cropIndex)}
-                                                    className="text-red-600 hover:text-red-700 text-sm"
-                                                >
-                                                    Remove
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            {/* Crop Type */}
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Crop Type
-                                                </label>
-                                                <select
-                                                    value={crop.cropType}
-                                                    onChange={(e) => {
-                                                        const newCropDetails = [...cropDetails];
-                                                        newCropDetails[categoryIndex].crops[cropIndex].cropType = e.target.value;
-                                                        setCropDetails(newCropDetails);
-                                                    }}
-                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-mycol-mint focus:border-transparent"
-                                                >
-                                                    <option value="">Select crop</option>
-                                                    {cropCategories[category.cropCategory]?.map((cropType) => (
-                                                        <option key={cropType} value={cropType}>
-                                                            {cropType}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-
-                                            {/* Sum Insured */}
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Sum Insured (₹)
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    value={crop.sumInsured}
-                                                    onChange={(e) => {
-                                                        const newCropDetails = [...cropDetails];
-                                                        newCropDetails[categoryIndex].crops[cropIndex].sumInsured = e.target.value;
-                                                        setCropDetails(newCropDetails);
-                                                    }}
-                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-mycol-mint focus:border-transparent"
-                                                    placeholder="Enter amount"
-                                                />
-                                            </div>
-
-                                            {/* Premium */}
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Premium (₹)
-                                                </label>
-                                                <input
-                                                    type="number"
-                                                    value={crop.premium}
-                                                    onChange={(e) => {
-                                                        const newCropDetails = [...cropDetails];
-                                                        newCropDetails[categoryIndex].crops[cropIndex].premium = e.target.value;
-                                                        setCropDetails(newCropDetails);
-                                                    }}
-                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-mycol-mint focus:border-transparent"
-                                                    placeholder="Enter amount"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                <button
-                                    type="button"
-                                    onClick={() => addCropToCategoryDetails(categoryIndex)}
-                                    className="mt-4 text-mycol-mint hover:text-mycol-mint-2 font-medium"
-                                >
-                                    + Add Another Crop
-                                </button>
+                            <div className="mt-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-3">
+                                    Select Crops
+                                </label>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {cropCategories[category.cropCategory]?.map((cropType) => (
+                                        <label
+                                            key={cropType}
+                                            className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={category.crops.some(crop => crop.cropType === cropType)}
+                                                onChange={(e) => handleCropSelection(categoryIndex, cropType, e.target.checked)}
+                                                className="rounded border-gray-300 text-mycol-mint focus:ring-mycol-mint h-4 w-4"
+                                            />
+                                            <span className="text-gray-700">{cropType}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {category.crops.length === 0 && (
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        Please select at least one crop
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>
+
+                    {/* Selected Crops Summary */}
+                    {category.crops.length > 0 && (
+                        <div className="mt-6 pt-6 border-t border-gray-200">
+                            <h4 className="text-sm font-medium text-gray-700 mb-3">
+                                Selected Crops
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {category.crops.map((crop, index) => (
+                                    <span
+                                        key={index}
+                                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-mycol-nyanza text-mycol-brunswick_green"
+                                    >
+                                        {crop.cropType}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             ))}
 

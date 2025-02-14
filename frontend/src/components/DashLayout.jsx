@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { UserCircle, Users, CalendarCheck, ClipboardList } from "lucide-react"; // Import Lucide icons
+import { Toaster } from "react-hot-toast";
 
 const DashLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,6 +24,17 @@ const DashLayout = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
+      <Toaster
+        toastOptions={{
+          // Default options for all toasts
+          duration: 3000,
+          style: {
+            padding: '16px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          },
+        }}
+      />
       <div
         className={`${isSidebarOpen ? "" : "hidden"
           } sm:block w-64 bg-mycol-dartmouth_green text-white`}

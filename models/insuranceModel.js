@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const capitalizeWords = (str) => (str ? str.toUpperCase().trim() : str);
 
-// Predefined crop thresholds
 const cropThresholds = {
   Cereals: {
     Wheat: {
@@ -164,45 +163,40 @@ const cropThresholds = {
   },
 };
 
-const cropDetailsSchema = new mongoose.Schema({
-  cropCategory: {
-    type: String,
-    required: true,
-    enum: Object.keys(cropThresholds),
-  },
-  crops: [
-    {
-      cropType: {
-        type: String,
-        required: true,
-      },
-      sumInsured: {
-        type: Number,
-        required: true,
-        min: 0,
-      },
-      premium: {
-        type: Number,
-        required: true,
-        min: 0,
-      },
-      thresholds: {
-        temperature: {
-          minTemperature: Number,
-          maxTemperature: Number,
-        },
-        rainfall: {
-          minRainfall: Number,
-          maxRainfall: Number,
-        },
-        humidity: {
-          minHumidity: Number,
-          maxHumidity: Number,
-        },
-      },
+const cropDetailsSchema = new mongoose.Schema(
+  {
+    cropCategory: {
+      type: String,
+      required: true,
+      enum: Object.keys(cropThresholds),
     },
-  ],
-});
+    crops: [
+      {
+        _id: false,
+        cropType: {
+          type: String,
+          required: true,
+        },
+
+        thresholds: {
+          temperature: {
+            minTemperature: Number,
+            maxTemperature: Number,
+          },
+          rainfall: {
+            minRainfall: Number,
+            maxRainfall: Number,
+          },
+          humidity: {
+            minHumidity: Number,
+            maxHumidity: Number,
+          },
+        },
+      },
+    ],
+  },
+  { _id: false }
+);
 
 const insurancePolicySchema = new mongoose.Schema(
   {
@@ -356,7 +350,8 @@ insurancePolicySchema.pre("validate", function (next) {
     categoryDetail.crops.forEach((crop) => {
       const thresholdData =
         cropThresholds[categoryDetail.cropCategory]?.[crop.cropType];
-      if (thresholdData) {
+      if (thresholdData)
+      {
         crop.thresholds = {
           temperature: {
             minTemperature: thresholdData.temperature.min,
@@ -387,11 +382,14 @@ insurancePolicySchema.pre("save", function (next) {
   const endDate = new Date(this.seasonDates.endDate);
   endDate.setHours(0, 0, 0, 0);
 
-  if (today >= startDate && today <= endDate) {
+  if (today >= startDate && today <= endDate)
+  {
     this.status = "active";
-  } else if (today > endDate) {
+  } else if (today > endDate)
+  {
     this.status = "inactive";
-  } else {
+  } else
+  {
     this.status = "draft";
   }
 
@@ -427,4 +425,4 @@ const InsurancePolicy = mongoose.model(
   insurancePolicySchema
 );
 
-module.exports = { InsurancePolicy, updatePolicyStatuses };
+module.exports = InsurancePolicy;

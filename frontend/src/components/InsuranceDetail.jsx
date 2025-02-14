@@ -1,62 +1,157 @@
 // InsuranceDetail.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 // If you're using any icon libraries, import them here, e.g., FontAwesome
-import { FaArrowLeft, FaCalendarAlt, FaMoneyBillWave, FaShieldAlt, FaMapMarkerAlt, FaFileInvoiceDollar, FaTemperatureHigh, FaCloudRain, FaSeedling, FaCheckCircle } from 'react-icons/fa';
-
+import { FaArrowLeft, FaShieldAlt, FaMapMarkerAlt, FaFileInvoiceDollar, FaTemperatureHigh, FaSeedling, FaCheckCircle } from 'react-icons/fa';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 const InsuranceDetail = () => {
-  // Static data representing the insurance policy
-  const insurance = {
-    name: 'Comprehensive Crop Protection Plan',
-    policyNumber: 'CROP-123456789',
-    description: 'This policy offers extensive coverage for a variety of crops against natural calamities, pests, and diseases. It is designed to provide financial support and stability to farmers, ensuring that unexpected events do not hinder their livelihood.',
-    cropSeason: 'Kharif',
-    cropType: 'Paddy',
-    seasonDates: {
-      startDate: '2023-06-01',
-      endDate: '2023-11-30',
-    },
-    premium: 5000,
-    sumInsured: 200000,
-    risks: ['Drought', 'Flood', 'Pests', 'Diseases'],
-    thresholds: {
-      temperature: {
-        minTemperature: 15,
-      },
-      rainfall: {
-        minRainfall: 100,
-      },
-    },
-    eligibility: {
-      minLandArea: 1,
-      maxLandArea: 10,
-      requiredDocuments: ['Land Ownership Document', 'Identification Proof', 'Bank Statement'],
-    },
-    claimCriteria: [
+  const { id } = useParams(); // Get ID from URL
+  const [insurance, setInsurance] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [hasApplied, setHasApplied] = useState(false);
+
+  useEffect(() => {
+    const fetchInsuranceDetails = async () => {
+      try
       {
-        damageType: 'Crop Loss',
-        minimumDamagePercentage: 30,
-        compensationPercentage: 70,
-      },
+        setIsLoading(true);
+        const response = await axios.get(`/api/v1/insurance/${id}`, {
+          withCredentials: true
+        });
+
+        setInsurance(response.data.data.policy);
+      } catch (err)
       {
-        damageType: 'Yield Reduction',
-        minimumDamagePercentage: 20,
-        compensationPercentage: 50,
-      },
-    ],
-    regions: [
+        console.error("Error fetching insurance:", err);
+        setError(err.response?.data?.message || 'Failed to fetch insurance details');
+      } finally
       {
-        state: 'Maharashtra',
-        district: 'Pune',
-      },
+        setIsLoading(false);
+      }
+    };
+
+    fetchInsuranceDetails();
+  }, [id]);
+
+
+
+  if (isLoading)
+  {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-mycol-mint"></div>
+      </div>
+    );
+  }
+
+  if (error)
+  {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600 text-center">
+          <h2 className="text-2xl font-bold mb-2">Error</h2>
+          <p>{error}</p>
+          <Link to="/insurance" className="text-mycol-mint hover:text-mycol-mint-2 mt-4 inline-block">
+            Back to Insurance Plans
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!insurance) return null;
+
+
+
+  const handleApply = async () => {
+    try
+    {
+      setIsLoading(true);
+      const response = await axios.post(`/api/v1/assign/create/${id}`, {
+        withCredentials: true
+      });
+      console.log("res api ", response)
+
+      if (response.data.status === 'success')
       {
-        state: 'Karnataka',
-        district: 'Bangalore Rural',
-      },
-    ],
-    status: 'Active',
-    createdBy: 'Admin User',
-    lastModifiedAt: '2023-10-10',
+        setHasApplied(true);
+        toast.success('Successfully applied for insurance policy!', {
+          duration: 4000,
+          position: 'top-right',
+          style: {
+            background: '#ECFDF5',
+            color: '#065F46',
+            border: '1px solid #059669',
+          },
+        });
+      }
+    } catch (err)
+    {
+      if (err.response?.data?.message?.includes('already applied'))
+      {
+        toast.error('You have already applied for this insurance policy', {
+          duration: 4000,
+          position: 'top-right',
+          style: {
+            background: '#FEE2E2',
+            color: '#DC2626',
+            border: '1px solid #DC2626',
+          },
+        });
+        setHasApplied(true);
+      } else
+      {
+        toast.error('Failed to apply for insurance policy. Please try again.', {
+          duration: 4000,
+          position: 'top-right',
+        });
+      }
+    } finally
+    {
+      setIsLoading(false);
+    }
+  };
+
+  {/* Apply Button Component */ }
+  const ApplyButton = () => {
+    if (isLoading)
+    {
+      return (
+        <button
+          disabled
+          className="bg-mycol-mint/50 text-white px-12 py-4 rounded-lg shadow-lg transition duration-300 text-lg font-semibold flex items-center mx-auto"
+        >
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+          Applying...
+        </button>
+      );
+    }
+
+    if (hasApplied)
+    {
+      return (
+        <div className="flex flex-col items-center">
+          <div className="bg-mycol-mint/10 text-mycol-mint px-6 py-3 rounded-lg flex items-center">
+            <FaCheckCircle className="mr-2" />
+            Already Applied
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Check your applications in dashboard
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        onClick={handleApply}
+        className="bg-mycol-mint hover:bg-mycol-mint-2 text-white px-12 py-4 rounded-lg shadow-lg transition duration-300 text-lg font-semibold flex items-center mx-auto"
+      >
+        <FaFileInvoiceDollar className="mr-2" /> Apply for This Policy
+      </button>
+    );
   };
 
   return (
@@ -93,7 +188,7 @@ const InsuranceDetail = () => {
                   </div>
                   <div className="bg-white/10 rounded-lg p-4">
                     <div className="text-mycol-celadon text-sm">Status</div>
-                    <div className={`font-semibold ${insurance.status === 'Active' ? 'text-mycol-mint' : 'text-red-400'
+                    <div className={`font-semibold ${insurance.status === 'active' ? 'text-mycol-mint' : 'text-red-400'
                       }`}>
                       {insurance.status}
                     </div>
@@ -114,9 +209,7 @@ const InsuranceDetail = () => {
                   </div>
 
                   <div className='mt-6'>
-                    <button className="bg-mycol-mint hover:bg-mycol-mint-2 text-white px-12 py-4 rounded-lg shadow-lg transition duration-300 text-lg font-semibold flex items-center mx-auto">
-                      <FaFileInvoiceDollar className="mr-2" /> Apply for This Policy
-                    </button>
+                    <ApplyButton />
                   </div>
 
                 </div>
@@ -131,6 +224,7 @@ const InsuranceDetail = () => {
           {/* Left Column */}
           <div className="space-y-8">
             {/* Coverage Details */}
+
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-semibold text-mycol-brunswick_green mb-6 flex items-center gap-2">
                 <div className="bg-mycol-nyanza p-2 rounded-lg">
@@ -141,11 +235,7 @@ const InsuranceDetail = () => {
               <div className="grid gap-4">
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <span className="text-gray-600">Crop Season</span>
-                  <span className="font-medium text-mycol-sea_green">{insurance.cropSeason}</span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                  <span className="text-gray-600">Crop Type</span>
-                  <span className="font-medium text-mycol-sea_green">{insurance.cropType}</span>
+                  <span className="font-medium text-mycol-sea_green capitalize">{insurance.cropSeason}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-gray-100">
                   <span className="text-gray-600">Season Duration</span>
@@ -160,14 +250,41 @@ const InsuranceDetail = () => {
                     ₹{insurance.sumInsured.toLocaleString()}
                   </span>
                 </div>
+                <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                  <span className="text-gray-600">Agent Fee</span>
+                  <span className="font-medium text-mycol-sea_green">
+                    ₹{insurance.agentFee.toLocaleString()}
+                  </span>
+                </div>
               </div>
+
+              {/* Covered Crops */}
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-600 mb-3">Covered Crops</h3>
+                <div className="space-y-3">
+                  {insurance.cropDetails.map((category, index) => (
+                    <div key={index} className="bg-mycol-nyanza/20 p-3 rounded-lg">
+                      <div className="font-medium text-mycol-brunswick_green mb-2">{category.cropCategory}</div>
+                      <div className="flex flex-wrap gap-2">
+                        {category.crops.map((crop, cropIndex) => (
+                          <span key={cropIndex} className="px-3 py-1 bg-white text-mycol-sea_green rounded-full text-sm">
+                            {crop.cropType}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Risks */}
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-gray-600 mb-3">Risks Covered</h3>
                 <div className="flex flex-wrap gap-2">
                   {insurance.risks.map((risk, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-mycol-nyanza text-mycol-sea_green rounded-full text-sm"
+                      className="px-3 py-1 bg-mycol-nyanza text-mycol-sea_green rounded-full text-sm capitalize"
                     >
                       {risk}
                     </span>
@@ -175,6 +292,7 @@ const InsuranceDetail = () => {
                 </div>
               </div>
             </div>
+
 
             {/* Eligibility Requirements */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -270,33 +388,42 @@ const InsuranceDetail = () => {
 
 
 
+
             {/* Thresholds */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-semibold text-mycol-brunswick_green mb-6 flex items-center gap-2">
                 <div className="bg-mycol-nyanza p-2 rounded-lg">
                   <FaTemperatureHigh className="text-mycol-mint w-5 h-5" />
                 </div>
-                Weather Thresholds
+                Weather Thresholds for Crops
               </h2>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="bg-mycol-nyanza/30 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 mb-3">
-                    <FaTemperatureHigh className="text-mycol-mint" />
-                    <span className="text-sm text-gray-600">Temperature</span>
+              <div className="space-y-4">
+                {insurance.cropDetails.map((category, categoryIndex) => (
+                  <div key={categoryIndex} className="border-b pb-4 last:border-0">
+                    <h3 className="font-medium text-mycol-brunswick_green mb-3">{category.cropCategory}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {category.crops.map((crop, cropIndex) => (
+                        <div key={cropIndex} className="bg-mycol-nyanza/30 p-4 rounded-lg">
+                          <div className="font-medium text-mycol-sea_green mb-2">{crop.cropType}</div>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Temperature:</span>
+                              <span>{crop.thresholds.temperature.minTemperature}°C - {crop.thresholds.temperature.maxTemperature}°C</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Rainfall:</span>
+                              <span>{crop.thresholds.rainfall.minRainfall}mm - {crop.thresholds.rainfall.maxRainfall}mm</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-600">Humidity:</span>
+                              <span>{crop.thresholds.humidity.minHumidity}% - {crop.thresholds.humidity.maxHumidity}%</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-lg font-medium text-mycol-sea_green">
-                    Min: {insurance.thresholds.temperature.minTemperature}°C
-                  </div>
-                </div>
-                <div className="bg-mycol-nyanza/30 p-4 rounded-lg">
-                  <div className="flex items-center gap-2 mb-3">
-                    <FaCloudRain className="text-mycol-mint" />
-                    <span className="text-sm text-gray-600">Rainfall</span>
-                  </div>
-                  <div className="text-lg font-medium text-mycol-sea_green">
-                    Min: {insurance.thresholds.rainfall.minRainfall} mm
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -413,9 +540,7 @@ const InsuranceDetail = () => {
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
             Get comprehensive coverage for your agricultural investments with our easy application process.
           </p>
-          <button className="bg-mycol-mint hover:bg-mycol-mint-2 text-white px-12 py-4 rounded-lg shadow-lg transition duration-300 text-lg font-semibold flex items-center mx-auto">
-            <FaFileInvoiceDollar className="mr-2" /> Apply for This Policy
-          </button>
+          <ApplyButton />
         </div>
       </div>
     </div>
@@ -423,26 +548,3 @@ const InsuranceDetail = () => {
 };
 
 export default InsuranceDetail;
-
-
-
-
-
-//   useEffect(() => {
-//     const getinsurance?ById = async () => {
-//       try {
-//         setIsLoading(true);
-//         const response = await axios.get(`http://127.0.0.1:3000/api/v1/insurance?/${id}`);
-//         if (response.status !== 200) {
-//           throw new Error("Failed to fetch insurance? details");
-//         }
-//         setinsurance?(response.data.data.policy); // Adjust based on your API response structure
-//         setIsLoading(false);
-//       } catch (err) {
-//         setError(err.message);
-//         setIsLoading(false);
-//       }
-//     };
-
-//     getinsurance?ById();
-//   }, [id]);

@@ -30,6 +30,10 @@ const insuranceAssignmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    visitDate: {
+      type: Date,
+      default: null,
+    },
     region: {
       state: {
         type: String,
