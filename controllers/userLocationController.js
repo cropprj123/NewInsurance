@@ -1,6 +1,7 @@
 const FarmVisit = require("../models/userLocationModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appErrors");
+const User = require("./../models/userModel");
 exports.createFarmVisit = catchAsync(async (req, res, next) => {
   const farmVisitData = {
     ...req.body,
@@ -34,16 +35,17 @@ exports.getFarmVisitById = catchAsync(async (req, res, next) => {
     .populate("farmer", "name email")
     .populate("agent", "name email");
 
-  if (!farmVisit) {
+  if (!farmVisit)
+  {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Additional authorization check
   if (
     req.user.role !== "admin" &&
     req.user.role !== "agent" &&
     farmVisit.agent.toString() !== req.user._id.toString()
-  ) {
+  )
+  {
     return next(
       new AppError(
         `You are not authorized. Only admins or the agent assigned to this farm visit can access this resource.`,
@@ -61,12 +63,13 @@ exports.getFarmVisitById = catchAsync(async (req, res, next) => {
 exports.updateFarmVisit = catchAsync(async (req, res, next) => {
   const farmVisit = await FarmVisit.findById(req.params.id);
 
-  if (!farmVisit) {
+  if (!farmVisit)
+  {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Ensure only the agent who created can update
-  if (farmVisit.agent.toString() !== req.user._id.toString()) {
+  if (farmVisit.agent.toString() !== req.user._id.toString())
+  {
     return next(new AppError("You can only update your own farm visits", 403));
   }
 
@@ -85,12 +88,13 @@ exports.updateFarmVisit = catchAsync(async (req, res, next) => {
 exports.deleteFarmVisit = catchAsync(async (req, res, next) => {
   const farmVisit = await FarmVisit.findById(req.params.id);
 
-  if (!farmVisit) {
+  if (!farmVisit)
+  {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Ensure only the agent who created can delete
-  if (farmVisit.agent.toString() !== req.user._id.toString()) {
+  if (farmVisit.agent.toString() !== req.user._id.toString())
+  {
     return next(new AppError("You can only delete your own farm visits", 403));
   }
 
@@ -104,7 +108,8 @@ exports.deleteFarmVisit = catchAsync(async (req, res, next) => {
 exports.searchUsers = catchAsync(async (req, res, next) => {
   const { search } = req.query;
 
-  if (!search) {
+  if (!search)
+  {
     return next(new AppError("Please provide a search term", 400));
   }
 

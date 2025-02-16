@@ -12,7 +12,7 @@ const AssignedInsurances = () => {
         const fetchAssignments = async () => {
             try
             {
-                const response = await axios.get('/api/v1/assign/my-assignments', { withCredentials: true });
+                const response = await axios.get('/api/v1/assign/my-assigned', { withCredentials: true });
                 setAssignments(response.data.data.assignments);
             } catch (error)
             {

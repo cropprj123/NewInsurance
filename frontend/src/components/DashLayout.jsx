@@ -97,23 +97,39 @@ const DashLayout = () => {
                   <CalendarCheck className="w-5 h-5" />
                   <span>Assign Agents</span>
                 </NavLink>
+
+
               </>
             )}
 
             {/* Agent Links */}
             {user.role === "agent" && (
-              <NavLink
-                to="assigned-insurances"
-                className={({ isActive }) =>
-                  `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
-                  }`
-                }
-              >
-                <ClipboardList className="w-5 h-5" />
-                <span>Assigned Insurances</span>
-              </NavLink>
+              <>
+                <NavLink
+                  to="assigned-insurances"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                      ? "bg-green-500/20 border border-green-500/30"
+                      : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <ClipboardList className="w-5 h-5" />
+                  <span>Assigned Insurances</span>
+                </NavLink>
+                <NavLink
+                  to="assign-location"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                      ? "bg-green-500/20 border border-green-500/30"
+                      : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <CalendarCheck className="w-5 h-5" />
+                  <span>Assign user location</span>
+                </NavLink>
+              </>
             )}
           </nav>
         </div>

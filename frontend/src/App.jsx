@@ -16,7 +16,7 @@ import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./components/DashboardComponents/UserProfile";
-import AssignedInsurances from "./components/DashboardComponents/AssignedInsurances";
+import AssignedInsurances from "./components/DashboardComponents/Agent/AssignedInsurances";
 import DiseaseDetection from "./components/Features/DiseaseDetection";
 import MarketPrices from "./components/Features/MarketPrices";
 import SoilAnalysis from "./components/Features/SoilAnalysis";
@@ -25,6 +25,7 @@ import NavigationBar from "./components/NavigationBar";
 import CropRecommendation from "./components/Features/CropRecommendation";
 import FertilizerRecommendation from "./components/Features/FertilizerRecommendation";
 import CreateInsurance from "./components/DashboardComponents/Admin/CreateInsurance";
+import AssignLocation from "./components/DashboardComponents/Agent/AssignLocation";
 function App() {
   return (
     <ErrorBoundary>
@@ -69,6 +70,7 @@ function App() {
 
                 {/* Agent only routes */}
                 <Route path="assigned-insurances" element={<ProtectedRoute role="agent"> <AssignedInsurances /></ProtectedRoute>} />
+                <Route path="assign-location" element={<ProtectedRoute role="agent"> <AssignLocation /></ProtectedRoute>} />
 
               </Route>
             </Routes>

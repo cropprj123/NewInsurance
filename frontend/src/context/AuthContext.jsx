@@ -11,14 +11,20 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const fetchUser = async () => {
-        try {
+        try
+        {
             const res = await api.get('/users/user');
             setUser(res.data.user);
-        } catch (err) {
+        } catch (err)
+        {
             setUser(null);
             console.log("error in AuthProvider", err.message)
+        } finally
+        {
+            setLoading(false);
         }
     };
 
@@ -27,31 +33,37 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (emailOrPhone, password) => {
-        try {
+        try
+        {
             const response = await api.post('/users/login', {
                 emailOrPhone,
                 password
             });
-            if (response.data.status === 'success') {
+            if (response.data.status === 'success')
+            {
                 await fetchUser();
                 return true;
             }
             return false;
-        } catch (err) {
+        } catch (err)
+        {
             console.log("error in AuthProvider login", err.message);
             return false;
         }
     };
 
     const signup = async (userData) => {
-        try {
+        try
+        {
             const response = await api.post('/users/signup', userData);
-            if (response.data.status === 'success') {
+            if (response.data.status === 'success')
+            {
                 await fetchUser();
                 return { success: true };
             }
             return { success: false, error: 'Signup failed' };
-        } catch (err) {
+        } catch (err)
+        {
             console.log("error in AuthProvider signup", err.message);
             return {
                 success: false,
@@ -61,16 +73,18 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        try {
+        try
+        {
             await api.get('/users/logout');
             setUser(null);
-        } catch (err) {
+        } catch (err)
+        {
             console.error("error in AuthProvider logout", err.message);
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
