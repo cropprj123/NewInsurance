@@ -1,4 +1,3 @@
-
 import os
 import json
 import numpy as np
@@ -13,13 +12,19 @@ import warnings
 from googletrans import Translator
 import pandas as pd
 from typing import Union, List, Dict, Any
+import google.generativeai as genai
+from PIL import Image
+import logging
+from moviepy.video.io.VideoFileClip import VideoFileClip
+import tempfile
 # Suppress warnings
 warnings.simplefilter("ignore", InconsistentVersionWarning)
 
 app = Flask(__name__)
 CORS(app)
 translator = Translator()
-
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 # Load machine learning models
 RF_model = joblib.load('crop.joblib')
 lg_model = joblib.load('logistic_regression_model.joblib')
@@ -30,6 +35,77 @@ desired = pd.read_csv('Crop_NPK.csv')
 disease_model = YOLO('best.pt')  # Crop disease detection model
 with open('description.json', 'r') as file:
     fertilizer_dict = json.load(file)
+
+# Load disease information
+with open('diseasedescription.json', 'r') as file:
+    disease_info = json.load(file)
+
+@app.route('/detect_crop_disease_video', methods=['POST'])
+def detect_crop_disease_video():
+    try:
+        # Check if a video file is uploaded
+        if 'video' not in request.files:
+            return jsonify({'error': 'No video provided', 'message': 'No video uploaded'}), 400
+        
+        # Save the uploaded video to a temporary file
+        video_file = request.files['video']
+        temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+        video_file.save(temp_video.name)
+        temp_video.close()
+
+        # Open the video file
+        cap = cv2.VideoCapture(temp_video.name)
+        if not cap.isOpened():
+            return jsonify({'error': 'Failed to open video', 'message': 'Invalid video file'}), 400
+
+        # Process each frame of the video
+        unique_diseases = {}  # Dictionary to store unique diseases and their details
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Run inference on the frame
+            results = disease_model.predict(source=frame, conf=0.25)
+
+            # Collect predictions for the current frame
+            for result in results:
+                for box in result.boxes:
+                    disease_class = disease_model.names[int(box.cls)]
+                    confidence = box.conf.item()
+                    disease_info = get_disease_info(disease_class)  # Get disease info
+
+                    # Update the unique_diseases dictionary
+                    if disease_class not in unique_diseases or confidence > unique_diseases[disease_class]['confidence']:
+                        unique_diseases[disease_class] = {
+                            'confidence': float(confidence),
+                            'info': disease_info
+                        }
+
+        # Release the video capture object
+        cap.release()
+
+        # Delete the temporary video file
+        os.unlink(temp_video.name)
+
+        # Prepare the response with unique diseases
+        unique_predictions = [
+            {
+                'disease': disease,
+                'confidence': details['confidence'],
+                'info': details['info']
+            }
+            for disease, details in unique_diseases.items()
+        ]
+
+        return jsonify({
+            'predictions': unique_predictions,
+            'message': 'Crop disease detection from video completed'
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e), 'message': 'Crop disease detection from video failed'}), 500
+
 def translate_batch(texts: Union[str, List[str]], dest: str = 'mr') -> Union[str, List[str]]:
     """
     Translate a single text or list of texts to the target language.

@@ -13,9 +13,31 @@ const farmVisitSchema = new mongoose.Schema(
       required: [true, "Farmer is required"],
     },
     farmDetails: {
-      cropType: {
-        type: String,
-        required: [true, "Crop type is required"],
+      cropDetails: {
+        type: Array,
+        required: [true, "Crop details are required"],
+        items: {
+          type: Object,
+          properties: {
+            cropCategory: {
+              type: String,
+              required: [true, "Crop category is required"],
+            },
+            crops: {
+              type: Array,
+              required: [true, "Crops are required"],
+              items: {
+                type: Object,
+                properties: {
+                  cropType: {
+                    type: String,
+                    required: [true, "Crop type is required"],
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       areaSize: {
         type: Number,
@@ -58,11 +80,18 @@ const farmVisitSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-farmVisitSchema.pre("save", function (next) {
+farmVisitSchema.pre("save", async function (next) {
   if (!this.visitIdentifier) {
+    const farmerDoc = await mongoose.model("User").findById(this.farmer);
+    if (!farmerDoc) {
+      return next(new Error("Farmer not found"));
+    }
+
+    const farmerName = farmerDoc.name;
     const lat = this.geolocation.coordinates[1];
     const lon = this.geolocation.coordinates[0];
-    this.visitIdentifier = `${this.farmer}-${lat}-${lon}`;
+
+    this.visitIdentifier = `${farmerName}-${lat}-${lon}`;
   }
   next();
 });

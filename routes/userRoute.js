@@ -11,6 +11,7 @@ router.get("/logout", authController.logout);
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
 router.get("/user", authController.user);
+router.get("/search", userController.searchUser);
 router.patch(
   "/updateme",
   userController.resizeUserImage,
@@ -18,7 +19,7 @@ router.patch(
 );
 router.patch("/updateMyPassword", authController.updatePassword);
 router.use(authController.protect);
-router.use(authController.restrictTo("admin"));
+router.use(authController.restrictTo("admin", "agent", "user"));
 
 router.route("/").get(userController.getalluser);
 module.exports = router;

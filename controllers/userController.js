@@ -149,3 +149,33 @@ exports.updateme = catchAsync(async (req, res, next) => {
     },
   });
 });
+exports.searchUser = catchAsync(async (req, res, next) => {
+  const { q } = req.query;
+
+  if (!q) {
+    return next(new AppError("Please provide a search query.", 400));
+  }
+
+  const users = await User.find({
+    $or: [
+      { name: { $regex: q, $options: "i" } },
+      { email: { $regex: q, $options: "i" } },
+    ],
+  });
+
+  if (users.length === 0) {
+    return res.status(200).json({
+      status: "success",
+      message: "No users found matching your search.",
+      data: [],
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    results: users.length,
+    data: {
+      users,
+    },
+  });
+});

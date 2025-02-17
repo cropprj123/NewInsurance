@@ -1,6 +1,7 @@
 const FarmVisit = require("../models/userLocationModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appErrors");
+const User = require("./../models/userModel");
 exports.createFarmVisit = catchAsync(async (req, res, next) => {
   const farmVisitData = {
     ...req.body,
@@ -38,7 +39,6 @@ exports.getFarmVisitById = catchAsync(async (req, res, next) => {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Additional authorization check
   if (
     req.user.role !== "admin" &&
     req.user.role !== "agent" &&
@@ -65,7 +65,6 @@ exports.updateFarmVisit = catchAsync(async (req, res, next) => {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Ensure only the agent who created can update
   if (farmVisit.agent.toString() !== req.user._id.toString()) {
     return next(new AppError("You can only update your own farm visits", 403));
   }
@@ -89,7 +88,6 @@ exports.deleteFarmVisit = catchAsync(async (req, res, next) => {
     return next(new AppError("Farm visit not found", 404));
   }
 
-  // Ensure only the agent who created can delete
   if (farmVisit.agent.toString() !== req.user._id.toString()) {
     return next(new AppError("You can only delete your own farm visits", 403));
   }
