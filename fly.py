@@ -43,63 +43,66 @@ with open('diseasedescription.json', 'r') as file:
 @app.route('/detect_crop_disease_video', methods=['POST'])
 def detect_crop_disease_video():
     try:
-        # Check if a video file is uploaded
         if 'video' not in request.files:
             return jsonify({'error': 'No video provided', 'message': 'No video uploaded'}), 400
         
-        # Save the uploaded video to a temporary file
         video_file = request.files['video']
         temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
         video_file.save(temp_video.name)
         temp_video.close()
 
-        # Open the video file
         cap = cv2.VideoCapture(temp_video.name)
         if not cap.isOpened():
             return jsonify({'error': 'Failed to open video', 'message': 'Invalid video file'}), 400
 
-        # Process each frame of the video
-        unique_diseases = {}  # Dictionary to store unique diseases and their details
+        unique_diseases = {}  # Track count, max confidence, and info
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 break
 
-            # Run inference on the frame
             results = disease_model.predict(source=frame, conf=0.25)
 
-            # Collect predictions for the current frame
             for result in results:
                 for box in result.boxes:
                     disease_class = disease_model.names[int(box.cls)]
                     confidence = box.conf.item()
-                    disease_info = get_disease_info(disease_class)  # Get disease info
+                    disease_info = get_disease_info(disease_class)
 
-                    # Update the unique_diseases dictionary
-                    if disease_class not in unique_diseases or confidence > unique_diseases[disease_class]['confidence']:
+                    # Update count and max confidence
+                    if disease_class in unique_diseases:
+                        unique_diseases[disease_class]['count'] += 1
+                        if confidence > unique_diseases[disease_class]['max_confidence']:
+                            unique_diseases[disease_class]['max_confidence'] = confidence
+                    else:
                         unique_diseases[disease_class] = {
-                            'confidence': float(confidence),
+                            'count': 1,
+                            'max_confidence': confidence,
                             'info': disease_info
                         }
 
-        # Release the video capture object
         cap.release()
-
-        # Delete the temporary video file
         os.unlink(temp_video.name)
 
-        # Prepare the response with unique diseases
+        # Convert to list and sort by count (descending), then confidence (descending)
         unique_predictions = [
             {
                 'disease': disease,
-                'confidence': details['confidence'],
+                'count': details['count'],
+                'confidence': details['max_confidence'],
                 'info': details['info']
             }
             for disease, details in unique_diseases.items()
         ]
 
+        # Sort by most frequent, then by highest confidence
+        sorted_predictions = sorted(
+            unique_predictions,
+            key=lambda x: (-x['count'], -x['confidence'])
+        )
+
         return jsonify({
-            'predictions': unique_predictions,
+            'predictions': sorted_predictions,
             'message': 'Crop disease detection from video completed'
         }), 200
 

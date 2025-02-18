@@ -18,14 +18,8 @@ const multerFilter = (req, file, cb) => {
     cb(new AppError("not an image!! please upload an image", 400));
   }
 };
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/temp");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+const storage = multer.memoryStorage(); // Store files in memory as buffers
+
 const upload = multer({
   storage,
   fileFilter: multerFilter,
@@ -41,34 +35,31 @@ exports.resizeUserImage = catchAsync(async (req, res, next) => {
       return next(new AppError("Failed to upload image.", 400));
     }
 
-    // Check if req.file exists
-    if (!req.file) {
-      return next();
-    }
-
-    const fileToProcess = req.file;
-
-    const resizedImagePath = `./public/temp/${fileToProcess.filename}-resized.jpeg`;
-
-    await sharp(fileToProcess.path)
-      .resize({ width: 474, height: 497 })
-      .toFormat("jpeg")
-      .jpeg({ quality: 90 })
-      .toFile(resizedImagePath);
+    if (!req.file) return next();
 
     try {
-      const result = await cloudinary.uploader.upload(resizedImagePath, {
-        resource_type: "auto",
-      });
-      console.log(result.secure_url);
+      const resizedImageBuffer = await sharp(req.file.buffer)
+        .resize({ width: 474, height: 497 })
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toBuffer();
+
+      const cloudinaryUpload = promisify(cloudinary.uploader.upload_stream);
+      const result = await cloudinaryUpload(
+        {
+          folder: "cropinsurance/users",
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error) throw error;
+          return result;
+        }
+      ).end(resizedImageBuffer);
 
       req.body.photo = result.secure_url;
-      console.log("Cloudinary URL for user:", result.secure_url);
-
-      // Call next middleware
       next();
     } catch (err) {
-      return next();
+      return next(new AppError("Image processing failed", 500));
     }
   });
 });

@@ -1,117 +1,104 @@
 const mongoose = require("mongoose");
 
-const farmVisitTrackingSchema = new mongoose.Schema(
+const policyEnrollmentSchema = new mongoose.Schema(
   {
     insuranceAssignment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "InsuranceAssignment",
-      required: [true, "Insurance Assignment reference is required"],
+      required: [true, "Insurance assignment reference is required"],
     },
     farmVisit: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "FarmVisit",
-      default: null,
+      required: [true, "Farm visit reference is required"],
     },
-    farmDetails: {
-      cropCondition: {
-        type: String,
-        enum: ["Excellent", "Good", "Fair", "Poor"],
-        required: true,
-      },
-      landMeasurement: {
-        type: Number,
-        required: true,
+    farmer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Farmer reference is required"],
+    },
+    agent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Agent reference is required"],
+    },
+    insurancePolicy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "InsurancePolicy",
+      required: [true, "Insurance policy reference is required"],
+    },
+    policyDetails: {
+      policyName: String,
+      policyNumber: String,
+      sumInsured: Number,
+      premium: Number,
+      seasonDates: {
+        startDate: Date,
+        endDate: Date,
       },
     },
 
-    insuranceStatus: {
-      type: String,
-      enum: ["Pending", "Active", "Expired", "Cancelled"],
-      default: "Pending",
-    },
-    paymentReceived: {
-      type: Boolean,
-      default: false,
-    },
-    eligibilityAssessment: {
-      isEligible: {
-        type: Boolean,
-        required: true,
-        default: false,
+    cropDetails: [
+      {
+        cropCategory: String,
+        crops: [
+          {
+            cropType: String,
+            thresholds: {
+              temperature: {
+                minTemperature: Number,
+                maxTemperature: Number,
+              },
+              rainfall: {
+                minRainfall: Number,
+                maxRainfall: Number,
+              },
+              humidity: {
+                minHumidity: Number,
+                maxHumidity: Number,
+              },
+            },
+          },
+        ],
       },
-      ineligibilityReasons: [
-        {
-          type: String,
-        },
-      ],
+    ],
+    farmDetails: {
+      areaSize: Number,
+      irrigationType: String,
+      geolocation: {
+        type: { type: String, enum: ["Point"] },
+        coordinates: [Number],
+      },
+    },
+    farmerDetails: {
+      name: String,
+      email: String,
+      phone: String,
+      address: {
+        state: String,
+        district: String,
+      },
     },
     status: {
       type: String,
-      enum: ["Pending", "Completed", "Ineligible"],
-      default: "Pending",
+      enum: ["active", "cancelled", "expired"],
+      default: "active",
     },
-    notes: {
-      type: String,
-      trim: true,
+    enrollmentDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
-farmVisitTrackingSchema.pre("save", async function (next) {
-  try {
-    const ineligibilityReasons = [];
-
-    const populatedAssignment = await this.model("InsuranceAssignment")
-      .findById(this.insuranceAssignment)
-      .populate("insurancePolicy");
-
-    if (!populatedAssignment || !populatedAssignment.insurancePolicy) {
-      return next(
-        new Error(
-          "Insurance Assignment or its associated policy could not be found."
-        )
-      );
-    }
-
-    const { insurancePolicy } = populatedAssignment;
-    const { landMeasurement } = this.farmDetails;
-    const { minLandArea, maxLandArea } = insurancePolicy.eligibility;
-
-    // Validate land measurement
-    if (landMeasurement < minLandArea || landMeasurement > maxLandArea) {
-      ineligibilityReasons.push("Land area does not meet policy requirements");
-    }
-
-    // Additional optional validations you might want to add
-    if (this.environmentalConditions) {
-      const { temperature, rainfall } = this.environmentalConditions;
-
-      if (temperature < insurancePolicy.thresholds?.temperature?.min) {
-        ineligibilityReasons.push("Temperature below policy threshold");
-      }
-
-      if (rainfall < insurancePolicy.thresholds?.rainfall?.min) {
-        ineligibilityReasons.push("Rainfall below policy threshold");
-      }
-    }
-
-    // Update eligibility and status
-    this.eligibilityAssessment.isEligible = ineligibilityReasons.length === 0;
-    this.eligibilityAssessment.ineligibilityReasons = ineligibilityReasons;
-    this.status =
-      ineligibilityReasons.length === 0 ? "Completed" : "Ineligible";
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-const FarmVisitTracking = mongoose.model(
-  "FarmVisitTracking",
-  farmVisitTrackingSchema
+const PolicyEnrollment = mongoose.model(
+  "PolicyEnrollment",
+  policyEnrollmentSchema
 );
 
-module.exports = FarmVisitTracking;
+module.exports = PolicyEnrollment;
