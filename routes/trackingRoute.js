@@ -11,4 +11,9 @@ router.post(
   policyEnrollmentController.createPolicyEnrollment
 );
 
+router.get(
+  "/farmer/:insuranceAssignmentId",
+  policyEnrollmentController.getFarmVisitsByAssignmentId
+);
+
 module.exports = router;

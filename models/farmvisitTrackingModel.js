@@ -69,6 +69,7 @@ const policyEnrollmentSchema = new mongoose.Schema(
         type: { type: String, enum: ["Point"] },
         coordinates: [Number],
       },
+      radius: Number,
     },
     farmerDetails: {
       name: String,
