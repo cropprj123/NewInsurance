@@ -96,7 +96,7 @@ const policyEnrollmentSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
+policyEnrollmentSchema.index({ "farmDetails.geolocation": "2dsphere" });
 const PolicyEnrollment = mongoose.model(
   "PolicyEnrollment",
   policyEnrollmentSchema
