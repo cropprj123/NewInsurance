@@ -33,6 +33,8 @@ import AgentEnrollments from "./components/DashboardComponents/Agent/AgentEnroll
 import InsuranceDetails from "./components/DashboardComponents/InsuranceDetails";
 import FarmerInsurances from "./components/DashboardComponents/Farmer/FarmerInsurances";
 import ClaimInsurance from "./components/DashboardComponents/Farmer/ClaimInsurance";
+import DiseaseExpert from "./components/Features/AI_Features/DiseaseExpert";
+import GeneralExpert from "./components/Features/AI_Features/GeneralExpert";
 function App() {
   return (
     <ErrorBoundary>
@@ -79,7 +81,8 @@ function App() {
                 />
                 <Route path="weather" element={<Cropvideo />} />
                 <Route path="cropvideo" element={<Cropvideo />} />
-                <Route path="market" element={<MarketPrices />} />
+                <Route path="disease-expert" element={<DiseaseExpert />} />
+                <Route path="general-expert" element={<GeneralExpert />} />
               </Route>
 
               <Route path="/aboutus" element={<AboutUs />} />

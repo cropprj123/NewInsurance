@@ -75,7 +75,7 @@ const FeaturesPage = () => {
               <span>Fertilizer Recommendation</span>
             </NavLink>
             <NavLink
-              to="/features/market"
+              to="/features/general-expert"
               className={({ isActive }) =>
                 `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
                   ? "bg-green-500/20 border border-green-500/30"
@@ -88,7 +88,7 @@ const FeaturesPage = () => {
             </NavLink>
 
             <NavLink
-              to="/features/market"
+              to="/features/disease-expert"
               className={({ isActive }) =>
                 `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
                   ? "bg-green-500/20 border border-green-500/30"

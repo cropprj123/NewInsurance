@@ -32,6 +32,7 @@ module.exports = {
           dartmouth_green: "#2d6a4f",
           brunswick_green: "#1b4332",
           dark_green: "#081c15",
+
         },
       },
       fontFamily: { sans: ['Almarai', ...defaultTheme.fontFamily.sans], },
