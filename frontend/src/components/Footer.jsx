@@ -7,7 +7,7 @@ const Footer = () => {
                 <div className="container mx-auto px-6 py-12">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 border-b border-white/10 pb-12">
                         <div>
-                            <h4 className="text-lg font-semibold mb-4">CropInsure</h4>
+                            <h4 className="text-lg font-semibold mb-4">Agro360</h4>
                             <p className="text-emerald-200 text-sm leading-relaxed">
                                 Empowering farmers through blockchain technology and AI-driven
                                 agricultural solutions.
@@ -75,7 +75,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="pt-8 text-center text-emerald-300 text-sm">
-                        © 2024 CropInsure. All rights reserved.
+                        © 2024 Agro360. All rights reserved.
                     </div>
                 </div>
             </footer>

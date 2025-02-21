@@ -40,7 +40,7 @@ function Navbar() {
         <div className="flex items-center justify-between max-w-screen-xl mx-auto px-6 py-5">
           {/* Logo and Title */}
           <div className="flex items-center space-x-6">
-            <img src={logo} className="h-14" alt="CropInsure Logo" />
+            <img src={logo} className="h-14" alt="Agro360 Logo" />
             <span className="text-3xl font-semibold text-mycol-lightGreen">
               Crop Insurance
             </span>

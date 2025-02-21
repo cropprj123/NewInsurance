@@ -69,6 +69,7 @@ const policyEnrollmentSchema = new mongoose.Schema(
         type: { type: String, enum: ["Point"] },
         coordinates: [Number],
       },
+      radius: Number,
     },
     farmerDetails: {
       name: String,
@@ -95,7 +96,7 @@ const policyEnrollmentSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
+policyEnrollmentSchema.index({ "farmDetails.geolocation": "2dsphere" });
 const PolicyEnrollment = mongoose.model(
   "PolicyEnrollment",
   policyEnrollmentSchema

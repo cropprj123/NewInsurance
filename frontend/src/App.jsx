@@ -21,13 +21,18 @@ import DiseaseDetection from "./components/Features/DiseaseDetection";
 import MarketPrices from "./components/Features/MarketPrices";
 import SoilAnalysis from "./components/Features/SoilAnalysis";
 import Cropvideo from "./components/Features/cropVideo";
-import WeatherForecast from "./components/Features/WeatherForecast";
+// import WeatherForecast from "./components/Features/WeatherForecast";
 import NavigationBar from "./components/NavigationBar";
 import CropRecommendation from "./components/Features/CropRecommendation";
 import FertilizerRecommendation from "./components/Features/FertilizerRecommendation";
 import CreateInsurance from "./components/DashboardComponents/Admin/CreateInsurance";
 import AssignLocation from "./components/DashboardComponents/Agent/AssignLocation";
 import AboutUs from "./page/Aboutus";
+import AssignmentDetail from "./components/DashboardComponents/Agent/AssignmentDetail";
+import AgentEnrollments from "./components/DashboardComponents/Agent/AgentEnrollments";
+import InsuranceDetails from "./components/DashboardComponents/InsuranceDetails";
+import FarmerInsurances from "./components/DashboardComponents/Farmer/FarmerInsurances";
+import ClaimInsurance from "./components/DashboardComponents/Farmer/ClaimInsurance";
 function App() {
   return (
     <ErrorBoundary>
@@ -91,6 +96,33 @@ function App() {
                 {/* All role profile page */}
                 <Route index element={<UserProfile />} />
 
+                {/* Farmer Routes */}
+
+                <Route
+                  path="my-insurances"
+                  element={
+                    <ProtectedRoute role="user">
+                      <FarmerInsurances />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="my-insurances/:id"
+                  element={
+                    <ProtectedRoute role="user">
+                      <InsuranceDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="claim-insurance/:id"
+                  element={
+                    <ProtectedRoute role="user">
+                      <ClaimInsurance />
+                    </ProtectedRoute>
+                  }
+                />
+
                 {/* Admin only routes */}
                 <Route
                   path="admin-dashboard"
@@ -138,6 +170,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+
+                <Route
+                  path="assigned-insurances/:id"
+                  element={
+                    <ProtectedRoute role="agent">
+                      <AssignmentDetail />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="assign-location"
                   element={
@@ -147,7 +188,28 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="my-enrollments"
+                  element={
+                    <ProtectedRoute role="agent">
+                      {" "}
+                      <AgentEnrollments />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="my-enrollments/:id"
+                  element={
+                    <ProtectedRoute role="agent">
+                      {" "}
+                      <InsuranceDetails />
+                    </ProtectedRoute>
+                  }
+                />
               </Route>
+
+
+
             </Routes>
             <Footer />
           </div>

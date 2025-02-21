@@ -26,7 +26,6 @@ const DashLayout = () => {
       {/* Sidebar */}
       <Toaster
         toastOptions={{
-          // Default options for all toasts
           duration: 3000,
           style: {
             padding: '16px',
@@ -36,8 +35,7 @@ const DashLayout = () => {
         }}
       />
       <div
-        className={`${isSidebarOpen ? "" : "hidden"
-          } sm:block w-64 bg-mycol-dartmouth_green text-white`}
+        className={`${isSidebarOpen ? "" : "hidden"} sm:block w-64 bg-mycol-dartmouth_green text-white flex-shrink-0`}
       >
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
@@ -56,6 +54,24 @@ const DashLayout = () => {
               <UserCircle className="w-5 h-5" />
               <span>My Profile</span>
             </NavLink>
+            {/* Farmer Links */}
+            {user.role === "user" && (
+              <>
+                {/* my-insurances */}
+                <NavLink
+                  to="my-insurances"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                      ? "bg-green-500/20 border border-green-500/30"
+                      : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <ClipboardList className="w-5 h-5" />
+                  <span>My Insurances</span>
+                </NavLink>
+              </>
+            )}
 
             {/* Admin Links */}
             {user.role === "admin" && (
@@ -129,6 +145,19 @@ const DashLayout = () => {
                   <CalendarCheck className="w-5 h-5" />
                   <span>Assign user location</span>
                 </NavLink>
+
+                <NavLink
+                  to="my-enrollments"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                      ? "bg-green-500/20 border border-green-500/30"
+                      : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <ClipboardList className="w-5 h-5" />
+                  <span>My Enrollments</span>
+                </NavLink>
               </>
             )}
           </nav>
@@ -136,11 +165,11 @@ const DashLayout = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1">
         {/* Top Bar */}
-        <div >
+        <div className="p-4 sm:hidden">
           <button
-            className="block sm:hidden text-mycol-dartmouth_green"
+            className="text-mycol-dartmouth_green"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             {isSidebarOpen ? (
@@ -177,8 +206,9 @@ const DashLayout = () => {
           </button>
         </div>
 
-        {/* Content Area */}
-        <div className="max-w-5xl mx-auto px-4 py-8">
+
+        {/* Content Area - Remove max-width and center alignment */}
+        <div className="p-6">
           <Outlet />
         </div>
       </div >

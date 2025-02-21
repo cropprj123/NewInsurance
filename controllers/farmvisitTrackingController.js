@@ -4,6 +4,38 @@ const FarmVisit = require("../models/userLocationModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
+exports.getFarmVisitsByAssignmentId = catchAsync(async (req, res, next) => {
+  const { insuranceAssignmentId } = req.params;
+
+  const insuranceAssignment = await InsuranceAssignment.findById(
+    insuranceAssignmentId
+  ).populate({
+    path: "farmer",
+    select: "_id",
+  });
+
+  if (!insuranceAssignment) {
+    return next(new AppError("Insurance assignment not found", 404));
+  }
+
+  const farmerId = insuranceAssignment.farmer._id;
+
+  const farmVisits = await FarmVisit.find({ farmer: farmerId }).populate({
+    path: "agent",
+    select: "name email phone",
+  });
+
+  if (!farmVisits.length) {
+    return next(new AppError("No farm visits found for this farmer", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    results: farmVisits.length,
+    data: { farmVisits },
+  });
+});
+
 exports.createPolicyEnrollment = catchAsync(async (req, res, next) => {
   const { insuranceAssignmentId } = req.params;
   const { farmVisitId } = req.body;
@@ -63,6 +95,7 @@ exports.createPolicyEnrollment = catchAsync(async (req, res, next) => {
       areaSize: farmVisit.farmDetails.areaSize,
       irrigationType: farmVisit.farmDetails.irrigationType,
       geolocation: farmVisit.geolocation,
+      radius: farmVisit.radius,
     },
     farmerDetails: {
       name: insuranceAssignment.farmer.name,
@@ -92,7 +125,12 @@ exports.createPolicyEnrollment = catchAsync(async (req, res, next) => {
 });
 
 exports.getsinglefinal = catchAsync(async (req, res, next) => {
-  const final = await PolicyEnrollment.findById(req.params.id);
+  const final = await PolicyEnrollment.findById(req.params.id)
+    .populate("insuranceAssignment")
+    .populate("farmVisit")
+    .populate("farmer")
+    .populate("agent")
+    .populate("insurancePolicy");
   if (!final) {
     return next(new AppError("nothing present soory for that", 404));
   }
@@ -113,6 +151,39 @@ exports.getall = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getagent = catchAsync(async (req, res, next) => {
+  const farmerId = req.user.id;
+
+  const enrollments = await PolicyEnrollment.find({ agent: farmerId })
+    .populate({
+      path: "insuranceAssignment",
+      select: "status applicationDate assignedDate",
+    })
+    .populate({
+      path: "farmVisit",
+      select: "farmDetails geolocation visitIdentifier createdAt",
+    })
+    .populate({
+      path: "agent",
+      select: "name email phone",
+    })
+    .populate({
+      path: "insurancePolicy",
+      select: "name policyNumber sumInsured premium",
+    });
+
+  if (!enrollments.length) {
+    return next(
+      new AppError("No policy enrollments found for this farmer", 404)
+    );
+  }
+
+  res.status(200).json({
+    status: "success",
+    results: enrollments.length,
+    data: { enrollments },
+  });
+});
 exports.getmyfinal = catchAsync(async (req, res, next) => {
   const farmerId = req.user.id;
 

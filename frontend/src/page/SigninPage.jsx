@@ -107,7 +107,7 @@ const SigninPage = () => {
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-mycol-brunswick_green mb-3">
-            Welcome Back to CropInsure
+            Welcome Back to Agro360
           </h1>
           <p className="text-mycol-sea_green text-lg max-w-2xl mx-auto">
             Access your crop insurance dashboard and manage your policies

@@ -1,13 +1,14 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Leaf, Sprout, Cloud, ShoppingCart } from "lucide-react";
+import { Leaf, Sprout, Cloud, ChartAreaIcon, Brain } from "lucide-react";
+import { FaBriefcaseMedical } from "react-icons/fa";
 
 // todo : make this layout responsive
 const FeaturesPage = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="max-w-72 flex-shrink-0 bg-mycol-dartmouth_green text-white">
+      <div className="max-w-80 flex-shrink-0 bg-mycol-dartmouth_green text-white">
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-8">Smart Farming</h2>
           <nav className="space-y-2">
@@ -15,10 +16,9 @@ const FeaturesPage = () => {
               to="/features"
               end
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
@@ -28,10 +28,9 @@ const FeaturesPage = () => {
             <NavLink
               to="/features/soil"
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
@@ -41,10 +40,9 @@ const FeaturesPage = () => {
             <NavLink
               to="/features/weather"
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
@@ -54,10 +52,9 @@ const FeaturesPage = () => {
             <NavLink
               to="/features/crop-recommendation"
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
@@ -68,10 +65,9 @@ const FeaturesPage = () => {
             <NavLink
               to="/features/fertilizer-recommendation"
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
@@ -81,15 +77,27 @@ const FeaturesPage = () => {
             <NavLink
               to="/features/market"
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-500/20 border border-green-500/30"
-                    : "hover:bg-green-500/20"
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
                 }`
               }
             >
-              <ShoppingCart className="w-5 h-5" />
-              <span>Market Prices</span>
+              <Brain className="w-5 h-5" />
+              <span>AI-Expert</span>
+            </NavLink>
+
+            <NavLink
+              to="/features/market"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
+                }`
+              }
+            >
+              <FaBriefcaseMedical className="w-5 h-5" />
+              <span>Disease AI-Expert </span>
             </NavLink>
           </nav>
         </div>

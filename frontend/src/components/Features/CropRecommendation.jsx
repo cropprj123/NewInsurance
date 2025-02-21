@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { Loader2, BarChart3 } from "lucide-react";
 import axios from "axios";
+import ProductCard from "../ProductCard";
 
 const CropRecommendation = () => {
     const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const CropRecommendation = () => {
     const [prediction, setPrediction] = useState({});
     const [selectedLanguage, setSelectedLanguage] = useState("en");
     const resultsRef = useRef(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,6 +29,31 @@ const CropRecommendation = () => {
         });
     };
 
+
+    const proxyFetch = async (url) => {
+        const proxies = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://cors-anywhere.herokuapp.com/'
+        ];
+
+        for (let proxy of proxies)
+        {
+            try
+            {
+                const proxyUrl = proxy + encodeURIComponent(url);
+                const response = await axios.get(proxyUrl);
+                return response.data;
+            } catch (error)
+            {
+                console.error(`Failed with proxy ${proxy}:`, error);
+                continue;
+            }
+        }
+        throw new Error('All proxies failed');
+    };
+
+    // Update handleSubmit function
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -46,9 +73,18 @@ const CropRecommendation = () => {
                 }
             );
             setPrediction(response.data);
+
+
+            // Fetch related products
+            if (response.data.crop)
+            {
+                const targetUrl = `https://cropify-v1.onrender.com/api/v1/crops/search?name=${response.data.crop}`;
+                const data = await proxyFetch(targetUrl);
+                setRelatedProducts(data.data.crop);
+            }
         } catch (error)
         {
-            console.error("Prediction Error:", error);
+            console.error("Error:", error);
         } finally
         {
             setLoading(false);
@@ -222,23 +258,44 @@ const CropRecommendation = () => {
             {prediction.crop && (
                 <div
                     ref={resultsRef}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                    className="space-y-6"
                 >
-                    <div className="p-6 border-b border-gray-100">
-                        <h2 className="text-xl font-semibold text-gray-800">
-                            Analysis Results
-                        </h2>
-
-                    </div>
-                    <div className="p-6">
-                        <div className="mb-6">
-                            <h3 className="text-lg font-semibold text-green-600 mb-2">
-                                Recommended Crop:{" "}
-                                <span className="text-gray-800">{prediction.crop}</span>
-                            </h3>
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="p-6 border-b border-gray-100">
+                            <h2 className="text-xl font-semibold text-gray-800">
+                                Analysis Results
+                            </h2>
                         </div>
-
+                        <div className="p-6">
+                            <div className="mb-6">
+                                <h3 className="text-lg font-semibold text-green-600 mb-2">
+                                    Recommended Crop:{" "}
+                                    <span className="text-gray-800">{prediction.crop}</span>
+                                </h3>
+                            </div>
+                        </div>
                     </div>
+
+                    {/* Related Products Section */}
+                    {relatedProducts.length > 0 && (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 border-b border-gray-100">
+                                <h2 className="text-xl font-semibold text-gray-900">
+                                    Related Products
+                                </h2>
+                                <p className="mt-1 text-gray-800">
+                                    Products available for your recommended crop
+                                </p>
+                            </div>
+                            <div className="p-6">
+                                <div className="space-y-6"> {/* Changed from grid to vertical stack */}
+                                    {relatedProducts.map((product) => (
+                                        <ProductCard key={product._id} product={product} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </>

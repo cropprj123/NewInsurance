@@ -35,7 +35,7 @@ const AboutUs = () => {
             },
             {
               name: "Om Patil",
-              role: "AgroTech Engineer",
+              role: "React Developer & AgroTech Engineer",
               img: "https://res.cloudinary.com/pruthvij/image/upload/v1714233794/kjpe1oc3zg9avnpw72do.jpg",
             },
             {

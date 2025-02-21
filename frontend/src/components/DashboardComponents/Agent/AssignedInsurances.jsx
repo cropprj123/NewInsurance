@@ -13,6 +13,7 @@ const AssignedInsurances = () => {
             try
             {
                 const response = await axios.get('/api/v1/assign/my-assigned', { withCredentials: true });
+                console.log(response);
                 setAssignments(response.data.data.assignments);
             } catch (error)
             {
@@ -72,7 +73,7 @@ const AssignedInsurances = () => {
                                 </div>
 
                                 <Link
-                                    to={`/profile/assignment/${assignment._id}`}
+                                    to={`/profile/assigned-insurances/${assignment._id}`}
                                     className="inline-block px-4 py-2 bg-mycol-dartmouth_green text-white rounded-md hover:bg-green-700 transition-colors"
                                 >
                                     View Details

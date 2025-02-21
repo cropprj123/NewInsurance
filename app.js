@@ -9,6 +9,8 @@ const assignmentRouter = require("./routes/assignmentRoute");
 const trackRouter = require("./routes/trackingRoute");
 const UserlocationRouter = require("./routes/userLocationRoute");
 const paymentRouter = require("./routes/paymentRoute");
+const claimRouter = require("./routes/claimRoute");
+const chatRouter = require("./routes/chatRoute");
 const AppError = require("./utils/appErrors");
 
 const app = express();
@@ -41,6 +43,9 @@ app.use("/api/v1/crops", cropRouter);
 app.use("/api/v1/assign", assignmentRouter);
 app.use("/api/v1/track", trackRouter);
 app.use("/api/v1/location", UserlocationRouter);
+app.use("/api/v1/claim", claimRouter);
+app.use("/api/v1/ai", chatRouter);
+
 app.use("/api/v1/payment", paymentRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl} url`));

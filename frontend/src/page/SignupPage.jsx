@@ -228,7 +228,7 @@ const SignupPage = () => {
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-mycol-brunswick_green mb-3">
-            Join CropInsure Today
+            Join Agro360 Today
           </h1>
           <p className="text-mycol-sea_green text-lg max-w-2xl mx-auto">
             Protect your agricultural investments with India's most trusted crop insurance platform
@@ -314,7 +314,7 @@ const SignupPage = () => {
             <div className="lg:col-span-2 space-y-8">
               <div className="bg-mycol-nyanza/50 p-6 rounded-xl">
                 <h3 className="text-xl font-semibold text-mycol-brunswick_green mb-4">
-                  Why Choose CropInsure?
+                  Why Choose Agro360?
                 </h3>
                 <ul className="space-y-4">
                   <li className="flex items-start space-x-3">

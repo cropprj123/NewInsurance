@@ -9,14 +9,11 @@ import {
     AlertCircle,
     Check,
     Loader2,
-
     ShoppingCart,
     Sprout,
-
 } from "lucide-react";
 
 // todo : disease panel hidden on small screen
-
 
 const DiseaseDetection = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -24,6 +21,7 @@ const DiseaseDetection = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [selectedLanguage, setSelectedLanguage] = useState("en");
+
 
 
     const [processingStep, setProcessingStep] = useState(null);
@@ -336,7 +334,7 @@ const DiseaseDetection = () => {
                             </div>
 
                             {/* Existing Symptoms and Prevention Sections */}
-                            {/* ... Keep previous symptoms and prevention sections here ... */}
+
 
                             {/* Updated Treatment Section with Cultural Methods */}
                             <div className="mt-6">
@@ -436,5 +434,5 @@ const DiseaseDetection = () => {
         </>
     );
 };
-
 export default DiseaseDetection;
+
