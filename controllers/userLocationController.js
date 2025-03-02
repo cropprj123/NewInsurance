@@ -2,6 +2,8 @@ const FarmVisit = require("../models/userLocationModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appErrors");
 const User = require("./../models/userModel");
+const Email = require("./../utils/email");
+
 exports.createFarmVisit = catchAsync(async (req, res, next) => {
   const farmVisitData = {
     ...req.body,

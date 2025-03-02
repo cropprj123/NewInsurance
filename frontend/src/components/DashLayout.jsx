@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { UserCircle, Users, CalendarCheck, ClipboardList } from "lucide-react"; // Import Lucide icons
+import { UserCircle, Users, CalendarCheck, ClipboardList, FileText } from "lucide-react"; // Import Lucide icons
 import { Toaster } from "react-hot-toast";
 
 const DashLayout = () => {
@@ -115,7 +115,21 @@ const DashLayout = () => {
                   }
                 >
                   <Users className="w-5 h-5" />
-                  <span>all enrollements</span>
+                  <span>All Enrollments</span>
+                </NavLink>
+
+                <NavLink
+                  to="claims"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                      isActive
+                        ? "bg-green-500/20 border border-green-500/30"
+                        : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <FileText className="w-5 h-5" />
+                  <span>Claims Management</span>
                 </NavLink>
 
                 <NavLink

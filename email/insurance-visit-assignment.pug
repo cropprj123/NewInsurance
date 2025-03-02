@@ -1,0 +1,248 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Insurance Visit Assignment
+    style.
+      :root {
+        --primary-blue: #1976D2;
+        --accent-green: #2E7D32;
+        --warm-orange: #F57C00;
+        --text-dark: #263238;
+        --text-light: #FFFFFF;
+        --bg-light: #F5F5F5;
+        --success-green: #43A047;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-light);
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: var(--text-dark);
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+        color: var(--text-light);
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .section {
+        background: #FFFFFF;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 1px solid #E0E0E0;
+      }
+
+      .section-title {
+        color: var(--primary-blue);
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      .label {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .value {
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+
+      .highlight-box {
+        background: #FFF3E0;
+        border-left: 4px solid var(--warm-orange);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: var(--success-green);
+        color: white;
+        border-radius: 15px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .map-link {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: var(--primary-blue);
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .map-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .important-note {
+        background: #E8F5E9;
+        border-left: 4px solid var(--accent-green);
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 4px;
+      }
+
+      .footer {
+        background: #1565C0;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+      }
+
+      .contact-info {
+        margin-top: 20px;
+        text-align: center;
+        color: #666;
+      }
+
+      .button-container {
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .action-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: var(--warm-orange);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+  body
+    .container
+      .header
+        h1 🌾 Insurance Visit Assignment
+        p Your New Farm Visit Schedule
+
+      .content
+        h2 Hello #{firstName},
+        
+        .highlight-box
+          if isAgent
+            p You have been assigned to conduct an insurance assessment visit.
+          else
+            p An insurance assessment visit has been scheduled for your farm.
+
+        .section
+          .section-title 📅 Visit Details
+          .info-grid
+            .label Date & Time
+            .value #{visitDate.toLocaleString()}
+            .label Status
+            .value
+              span.status-badge Scheduled
+
+        .section
+          .section-title 👨‍🌾 Farmer Information
+          .info-grid
+            .label Name
+            .value #{farmer.name}
+            .label Phone
+            .value #{farmer.phone}
+            .label Address
+            .value
+              | #{farmer.address.street}, 
+              br
+              | #{farmer.address.village}, 
+              br
+              | #{farmer.address.district}, 
+              br
+              | #{farmer.address.state} - #{farmer.address.pincode}
+
+        .section
+          .section-title 📋 Insurance Policy Details
+          .info-grid
+            .label Policy Name
+            .value #{insurancePolicy.name}
+            .label Coverage
+            .value ₹#{insurancePolicy.coverage.toLocaleString()}
+            .label Premium
+            .value ₹#{insurancePolicy.premium.toLocaleString()}
+            if insurancePolicy.description
+              .label Description
+              .value #{insurancePolicy.description}
+
+        if coordinates
+          .button-container
+            a.map-link(href=`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` target="_blank")
+              | 🗺️ View Location on Maps
+
+        .important-note
+          h3 🔍 Important Instructions
+          ul
+            li Please arrive on time for the scheduled visit
+            li Carry all necessary documentation
+            li In case of any changes, please inform at least 24 hours in advance
+            li Keep contact numbers handy for communication
+
+        .contact-info
+          h3 📞 Need Help?
+          p For any queries or rescheduling:
+          p ☎️ Helpline: 1800-FARM-HELP
+          p 📧 Email: support@insurancevisit.com
+          p 💬 WhatsApp: +91 9876543210
+
+      .footer
+        p 🤝 Together for Better Agriculture
+        p © 2024 Farm Insurance Management System
+        p All rights reserved. 

@@ -122,7 +122,15 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
     return next(new AppError("Visit date is required", 400));
   }
 
-  const assignment = await InsuranceAssignment.findById(assignmentId);
+  const assignment = await InsuranceAssignment.findById(assignmentId)
+    .populate({
+      path: 'farmer',
+      select: 'name email phone address'
+    })
+    .populate({
+      path: 'insurancePolicy',
+      select: 'name description coverage premium'
+    });
 
   if (!assignment) {
     return next(new AppError("Insurance assignment not found", 404));
@@ -142,6 +150,50 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
 
     await assignment.save();
 
+    // Get complete agent details for email
+    const agent = await User.findById(assignment.agent)
+      .select('name email phone address');
+
+    // Send email notifications about visit date update
+    try {
+      const visitData = {
+        visitDate: visitDateObj,
+        location: `${assignment.region.district}, ${assignment.region.state}`,
+        farmer: {
+          name: assignment.farmer.name,
+          phone: assignment.farmer.phone,
+          address: assignment.farmer.address
+        },
+        agent: {
+          name: agent.name,
+          phone: agent.phone,
+          address: agent.address
+        },
+        insurancePolicy: {
+          name: assignment.insurancePolicy.name,
+          description: assignment.insurancePolicy.description,
+          coverage: assignment.insurancePolicy.coverage,
+          premium: assignment.insurancePolicy.premium
+        }
+      };
+
+      // Notify farmer about date change
+      const farmerEmail = new Email(
+        assignment.farmer,
+        `${process.env.FRONTEND_URL}/insurance-assignments/${assignment._id}`
+      );
+      await farmerEmail.sendInsuranceVisitNotification(visitData, false);
+
+      // Notify agent about date change
+      const agentEmail = new Email(
+        agent,
+        `${process.env.FRONTEND_URL}/insurance-assignments/${assignment._id}`
+      );
+      await agentEmail.sendInsuranceVisitNotification(visitData, true);
+    } catch (error) {
+      console.error('Error sending email notifications:', error);
+    }
+
     return res.status(200).json({
       status: "success",
       data: { assignment },
@@ -155,7 +207,8 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
     );
   }
 
-  const agent = await User.findById(agentId);
+  const agent = await User.findById(agentId)
+    .select('name email phone address role');
 
   if (!agent || agent.role !== "agent") {
     return next(new AppError("Invalid agent", 400));
@@ -183,6 +236,46 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
   assignment.notes = `Agent assigned on ${new Date().toISOString()} with scheduled visit on ${visitDateObj.toISOString()}`;
 
   await assignment.save();
+
+  // Send email notifications about new assignment
+  try {
+    const visitData = {
+      visitDate: visitDateObj,
+      location: `${assignment.region.district}, ${assignment.region.state}`,
+      farmer: {
+        name: assignment.farmer.name,
+        phone: assignment.farmer.phone,
+        address: assignment.farmer.address
+      },
+      agent: {
+        name: agent.name,
+        phone: agent.phone,
+        address: agent.address
+      },
+      insurancePolicy: {
+        name: assignment.insurancePolicy.name,
+        description: assignment.insurancePolicy.description,
+        coverage: assignment.insurancePolicy.coverage,
+        premium: assignment.insurancePolicy.premium
+      }
+    };
+
+    // Notify farmer about agent assignment and visit
+    const farmerEmail = new Email(
+      assignment.farmer,
+      `${process.env.FRONTEND_URL}/insurance-assignments/${assignment._id}`
+    );
+    await farmerEmail.sendInsuranceVisitNotification(visitData, false);
+
+    // Notify agent about new assignment
+    const agentEmail = new Email(
+      agent,
+      `${process.env.FRONTEND_URL}/insurance-assignments/${assignment._id}`
+    );
+    await agentEmail.sendInsuranceVisitNotification(visitData, true);
+  } catch (error) {
+    console.error('Error sending email notifications:', error);
+  }
 
   res.status(200).json({
     status: "success",

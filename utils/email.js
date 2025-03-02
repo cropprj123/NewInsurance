@@ -1,62 +1,3 @@
-// const nodemailer = require("nodemailer");
-// const pug = require("pug");
-// // const htmlToText = require('html-to-text');
-// const { convert } = require("html-to-text");
-
-// module.exports = class Email {
-//   constructor(user, url) {
-//     this.to = user.email;
-//     this.firstName = user.name.split(" ")[0];
-//     //the url is ooming from the authcontroller
-//     this.url = url;
-//     this.from = `PRUTHVIJ DESAI <${process.env.EMAIL_FROM}>`;
-//   }
-
-//   newTransport() {
-//     return nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.GMAIL_ADDRESS,
-//         pass: process.env.GMAIL_APP_PASSWORD,
-//       },
-//     });
-//   }
-
-//   // Send the actual email
-//   async send(template, subject, booking, user) {
-//     console.log("First Name:", this.firstName); // Log the firstName
-//     const html = pug.renderFile(`${__dirname}/../email/${template}.pug`, {
-//       firstName: this.firstName,
-//       url: this.url,
-//       subject,
-//       user,
-//     });
-
-//     const mailOptions = {
-//       from: this.from,
-//       to: this.to,
-//       subject,
-//       html,
-//       text: convert(html),
-//     };
-
-//     await this.newTransport().sendMail(mailOptions);
-//   }
-//   async sendBookingReceipt(booking) {
-//     await this.send("receipt", "Booking Receipt", booking);
-//   }
-
-//   async sendWelcome() {
-//     await this.send("welcome", "Welcome to the  Family!");
-//   }
-
-//   async sendPasswordReset() {
-//     await this.send(
-//       "passwordReset",
-//       "Your password reset token (valid for only 10 minutes)"
-//     );
-//   }
-// };
 const nodemailer = require("nodemailer");
 const pug = require("pug");
 const { convert } = require("html-to-text");
@@ -66,7 +7,6 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.url = url;
-
     this.from = `PRUTHVIJ . P .DESAI <${process.env.GMAIL_ADDRESS}>`;
   }
 
@@ -91,7 +31,7 @@ module.exports = class Email {
   }
 
   // Send the actual email
-  async send(template, subject, booking, user) {
+  async send(template, subject, data = {}) {
     try {
       console.log("Attempting to send email to:", this.to);
       console.log("Using Gmail address:", process.env.GMAIL_ADDRESS);
@@ -100,8 +40,7 @@ module.exports = class Email {
         firstName: this.firstName,
         url: this.url,
         subject,
-        user,
-        booking,
+        ...data
       });
 
       const mailOptions = {
@@ -126,11 +65,13 @@ module.exports = class Email {
       throw error;
     }
   }
+
   async sendWelcome() {
     await this.send("welcome", "Welcome to CropGuard Assurance! 🌾");
   }
+
   async sendBookingReceipt(booking) {
-    await this.send("receipt", "Insurance Premium Payment Receipt", booking);
+    await this.send("receipt", "Insurance Premium Payment Receipt", { booking });
   }
 
   async sendPasswordReset() {
@@ -138,5 +79,37 @@ module.exports = class Email {
       "passwordReset",
       "Your password reset token (valid for only 10 minutes)"
     );
+  }
+
+  async sendFarmVisitNotification(visitData, isAgent = false) {
+    const subject = isAgent 
+      ? "🌾 New Farm Visit Assignment"
+      : "🌾 Farm Visit Scheduled";
+
+    await this.send("farm-visit-notification", subject, {
+      isAgent,
+      visitDate: visitData.visitDate,
+      farmerName: visitData.farmer?.name,
+      farmerPhone: visitData.farmer?.phone,
+      agentName: visitData.agent?.name,
+      agentPhone: visitData.agent?.phone,
+      location: visitData.location,
+      coordinates: visitData.coordinates
+    });
+  }
+
+  async sendInsuranceVisitNotification(visitData, isAgent = false) {
+    const subject = isAgent 
+      ? "🌾 New Insurance Visit Assignment"
+      : "🌾 Insurance Visit Scheduled";
+
+    await this.send("insurance-visit-assignment", subject, {
+      isAgent,
+      visitDate: visitData.visitDate,
+      farmer: visitData.farmer,
+      agent: visitData.agent,
+      insurancePolicy: visitData.insurancePolicy,
+      coordinates: visitData.coordinates
+    });
   }
 };

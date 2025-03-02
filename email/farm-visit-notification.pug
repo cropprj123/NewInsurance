@@ -1,0 +1,161 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Farm Visit Scheduled
+    style.
+      :root {
+        --primary-green: #2E7D32;
+        --accent-brown: #795548;
+        --highlight-gold: #FFB300;
+        --text-dark: #263238;
+        --text-light: #FFFFFF;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #F5F5F5;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: var(--text-dark);
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary-green), var(--accent-brown));
+        color: var(--text-light);
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .visit-details {
+        background: #F8F9FA;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        border-left: 4px solid var(--primary-green);
+      }
+
+      .detail-row {
+        display: flex;
+        margin: 10px 0;
+        align-items: center;
+      }
+
+      .detail-label {
+        width: 120px;
+        font-weight: bold;
+        color: var(--accent-brown);
+      }
+
+      .detail-value {
+        flex: 1;
+      }
+
+      .map-link {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: var(--highlight-gold);
+        color: var(--text-dark);
+        text-decoration: none;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: transform 0.2s;
+      }
+
+      .map-link:hover {
+        transform: translateY(-2px);
+      }
+
+      .footer {
+        background: var(--accent-brown);
+        color: var(--text-light);
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+      }
+
+      .contact-info {
+        margin-top: 20px;
+        text-align: center;
+        color: #666;
+      }
+
+      .icon {
+        font-size: 20px;
+        margin-right: 8px;
+      }
+
+  body
+    .container
+      .header
+        h1 🌾 Farm Visit Scheduled
+        p Your Agricultural Success Partner
+
+      .content
+        h2 Hello #{firstName},
+        
+        if isAgent
+          p We're pleased to inform you that you have been assigned to conduct a farm visit.
+        else
+          p We're pleased to inform you that a farm visit has been scheduled for your farm.
+
+        .visit-details
+          .detail-row
+            .detail-label 📅 Date
+            .detail-value #{visitDate}
+          
+          if isAgent
+            .detail-row
+              .detail-label 👨‍🌾 Farmer
+              .detail-value #{farmerName}
+            
+            .detail-row
+              .detail-label 📱 Contact
+              .detail-value #{farmerPhone}
+          else
+            .detail-row
+              .detail-label 👨‍💼 Agent
+              .detail-value #{agentName}
+            
+            .detail-row
+              .detail-label 📱 Contact
+              .detail-value #{agentPhone}
+
+          .detail-row
+            .detail-label 📍 Location
+            .detail-value #{location}
+
+          if coordinates
+            a.map-link(href=`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}` target="_blank")
+              | 🗺️ View on Google Maps
+
+        .contact-info
+          p If you need to reschedule or have any questions, please contact us:
+          p ☎️ Helpline: 1800-FARM-HELP
+          p 📧 Email: support@farmvisit.com
+
+      .footer
+        p 🌱 Growing Together | Making Agriculture Better
+        p © 2024 Farm Visit Management System. All rights reserved. 
