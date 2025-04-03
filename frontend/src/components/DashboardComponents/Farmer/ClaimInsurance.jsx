@@ -373,16 +373,10 @@ const ClaimInsurance = () => {
                   )}
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Claim{" "}
-                      {claimResponse.claim.status === "approved"
-                        ? "Approved"
-                        : "Rejected"}
+                      {claimResponse.message}
                     </h2>
                     <p className="text-gray-600 mt-1">
-                      Submitted on{" "}
-                      {new Date(
-                        claimResponse.claim.createdAt
-                      ).toLocaleDateString()}
+                      Claim ID: {claimResponse.claim._id}
                     </p>
                   </div>
                 </div>
@@ -394,6 +388,33 @@ const ClaimInsurance = () => {
                   }`}
                 >
                   {claimResponse.claim.status.toUpperCase()}
+                </div>
+              </div>
+            </div>
+
+            {/* Claim Details */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Claim Information
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-1">Policy Enrollment ID</p>
+                  <p className="font-medium">{claimResponse.claim.policyEnrollmentId}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-1">Farmer ID</p>
+                  <p className="font-medium">{claimResponse.claim.farmer}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-1">Created At</p>
+                  <p className="font-medium">
+                    {new Date(claimResponse.claim.createdAt).toLocaleString()}
+                  </p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-1">Version</p>
+                  <p className="font-medium">{claimResponse.claim.__v}</p>
                 </div>
               </div>
             </div>
@@ -431,13 +452,29 @@ const ClaimInsurance = () => {
                 Threshold Analysis
               </h3>
               <div className="space-y-4">
-                {claimResponse.thresholdResults.notes.map((note, index) => (
-                  <ThresholdResult
-                    key={index}
-                    satisfied={note.includes("✔")}
-                    message={note}
-                  />
-                ))}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="p-4 bg-gray-50 rounded-xl">
+                    <p className="text-sm text-gray-600 mb-1">Temperature Threshold</p>
+                    <p className="font-medium">
+                      {claimResponse.thresholdResults.temperatureMinExceeded ? "Exceeded" : "Within Limits"}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-xl">
+                    <p className="text-sm text-gray-600 mb-1">Rainfall Threshold</p>
+                    <p className="font-medium">
+                      {claimResponse.thresholdResults.rainfallMaxExceeded ? "Exceeded" : "Within Limits"}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  {claimResponse.thresholdResults.notes.map((note, index) => (
+                    <ThresholdResult
+                      key={index}
+                      satisfied={!note.includes("not")}
+                      message={note}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -446,15 +483,27 @@ const ClaimInsurance = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Location Verification
               </h3>
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-mycol-mint flex-shrink-0" />
-                <div>
-                  <p className="text-gray-700">
-                    Coordinates:{" "}
-                    {claimResponse.claim.geolocation.coordinates.join(", ")}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {claimResponse.claim.note.split("|")[1].trim()}
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="w-5 h-5 text-mycol-mint flex-shrink-0 mt-1" />
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Coordinates</p>
+                      <p className="font-medium">
+                        {claimResponse.claim.geolocation.coordinates.join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-600 mb-1">Location Details</p>
+                  <p className="font-medium whitespace-pre-line">
+                    {claimResponse.claim.note.split("|").map((part, index) => (
+                      <span key={index}>
+                        {part.trim()}
+                        {index < claimResponse.claim.note.split("|").length - 1 && <br />}
+                      </span>
+                    ))}
                   </p>
                 </div>
               </div>

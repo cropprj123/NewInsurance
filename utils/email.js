@@ -70,8 +70,8 @@ module.exports = class Email {
     await this.send("welcome", "Welcome to CropGuard Assurance! 🌾");
   }
 
-  async sendBookingReceipt(booking) {
-    await this.send("receipt", "Insurance Premium Payment Receipt", { booking });
+  async sendBookingReceipt(paymentRecord) {
+    await this.send("receipt", "Insurance Premium Payment Receipt", { paymentRecord });
   }
 
   async sendPasswordReset() {

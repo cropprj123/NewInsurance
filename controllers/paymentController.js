@@ -113,10 +113,19 @@ exports.createPremiumPaymentCheckout = catchAsync(async (req, res, next) => {
 
   const paymentRecord = await InsurancePremiumPayment.create({
     farmer: enrollmentData.farmer,
+    enrollement: enrollmentData._id,
     farmerName: enrollmentData.farmerDetails.name,
-    enrollement: enrollment,
-    insurancePolicy: enrollmentData.insurancePolicy,
-    policyDetails: enrollmentData.policyDetails,
+    policyDetails: {
+      policyName: enrollmentData.policyDetails.policyName,
+      policyNumber: enrollmentData.policyDetails.policyNumber,
+      sumInsured: enrollmentData.policyDetails.sumInsured,
+      premium: enrollmentData.policyDetails.premium,
+      coverage: enrollmentData.policyDetails.coverage,
+      seasonDates: {
+        startDate: enrollmentData.policyDetails.startDate,
+        endDate: enrollmentData.policyDetails.endDate
+      }
+    },
     paymentDetails: {
       transactionId: `TXN-${Date.now()}-${Math.random()
         .toString(36)

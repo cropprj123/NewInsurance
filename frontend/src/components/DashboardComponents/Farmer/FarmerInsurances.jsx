@@ -267,19 +267,23 @@ const FarmerInsurances = () => {
   const handlePaymentSuccess = async (enrollmentId) => {
     try {
       const response = await axios.get(
-        `/api/v1/payment/booking?enrollment=${enrollmentId}&payment=success`
+        `/api/v1/payment/booking?enrollment=${enrollmentId}&payment=success`,
+        { withCredentials: true }
       );
-      if (response.status === 201) {
+      
+      if (response.data.status === "success") {
         toast.success("Insurance premium payment recorded successfully!");
-        // Refresh the page and navigate back to the original URL
-        window.location.href = "http://localhost:5173/profile/my-insurances";
-        toast.success("Insurance premium payment recorded successfully!");
+        // Refresh insurances data instead of full page reload
+        await fetchInsurances();
+        // Remove query parameters from URL without page reload
+        window.history.replaceState({}, '', '/profile/my-insurances');
       } else {
-        toast.error("Unexpected response status");
+        toast.error(response.data.message || "Failed to process payment");
       }
     } catch (error) {
       console.error("Error processing payment:", error);
-      toast.error("Failed to process payment");
+      const errorMessage = error.response?.data?.message || "Failed to process payment";
+      toast.error(errorMessage);
     }
   };
 
@@ -426,7 +430,7 @@ const FarmerInsurances = () => {
                 </motion.button>
               </motion.div>
             ) : (
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {insurances.map((insurance, index) => (
                   <motion.div
                     key={insurance.id}

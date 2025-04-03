@@ -172,8 +172,8 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
         insurancePolicy: {
           name: assignment.insurancePolicy.name,
           description: assignment.insurancePolicy.description,
-          coverage: assignment.insurancePolicy.coverage,
-          premium: assignment.insurancePolicy.premium
+          coverage: Number(assignment.insurancePolicy.coverage || 0),
+          premium: Number(assignment.insurancePolicy.premium || 0)
         }
       };
 
@@ -255,8 +255,8 @@ exports.assignAgentToInsurance = catchAsync(async (req, res, next) => {
       insurancePolicy: {
         name: assignment.insurancePolicy.name,
         description: assignment.insurancePolicy.description,
-        coverage: assignment.insurancePolicy.coverage,
-        premium: assignment.insurancePolicy.premium
+        coverage: Number(assignment.insurancePolicy.coverage || 0),
+        premium: Number(assignment.insurancePolicy.premium || 0)
       }
     };
 
