@@ -34,6 +34,73 @@ const Insurance = () => {
     return text.length > limit ? text.slice(0, limit) + "..." : text;
   };
 
+  // Helper function to get crop type from insurance
+  const getCropType = (insurance) => {
+    if (!insurance.cropDetails || insurance.cropDetails.length === 0) return "";
+
+    // Get the first crop category
+    const firstCategory = insurance.cropDetails[0];
+
+    // Return the category name or the first crop type if available
+    if (firstCategory.crops && firstCategory.crops.length > 0)
+    {
+      return firstCategory.crops[0].cropType;
+    }
+
+    return firstCategory.cropCategory || "";
+  };
+
+  // Helper function to check if insurance matches the category filter
+  const matchesCategory = (insurance, categoryId) => {
+    if (categoryId === 'all') return true;
+
+    if (!insurance.cropDetails || insurance.cropDetails.length === 0) return false;
+
+    return insurance.cropDetails.some(detail =>
+      detail.cropCategory && detail.cropCategory.toLowerCase() === categoryId.toLowerCase()
+    );
+  };
+
+  // Search and filter logic
+  useEffect(() => {
+    if (!insurances.length) return;
+
+    let filtered = [...insurances];
+
+    // Search filter with null checks
+    if (searchTerm)
+    {
+      filtered = filtered.filter(insurance => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          (insurance.name?.toLowerCase() || '').includes(searchLower) ||
+          (insurance.description?.toLowerCase() || '').includes(searchLower) ||
+          (getCropType(insurance).toLowerCase() || '').includes(searchLower) ||
+          (insurance.cropSeason?.toLowerCase() || '').includes(searchLower) ||
+          (insurance.regions?.some(region =>
+            (region.state?.toLowerCase() || '').includes(searchLower) ||
+            (region.district?.toLowerCase() || '').includes(searchLower)
+          )) || false
+        );
+      });
+    }
+
+    // Category filter - updated to use matchesCategory helper
+    if (activeFilter !== 'all')
+    {
+      filtered = filtered.filter(insurance =>
+        matchesCategory(insurance, activeFilter)
+      );
+    }
+
+    // Price range filter
+    filtered = filtered.filter(insurance =>
+      insurance.premium <= priceRange[1] && insurance.premium >= priceRange[0]
+    );
+
+    setFilteredInsurances(filtered);
+  }, [searchTerm, activeFilter, priceRange, insurances]);
+
   // FAQ data
   const faqData = [
     {
@@ -83,36 +150,54 @@ const Insurance = () => {
   ];
 
   // Search and filter logic
-  useEffect(() => {
-    if (!insurances.length) return;
+  // Search and filter logic - REMOVE THIS DUPLICATE useEffect BLOCK
+  // useEffect(() => {
+  //   if (!insurances.length) return;
 
-    let filtered = [...insurances];
+  //   let filtered = [...insurances];
 
-    // Search filter
-    if (searchTerm)
-    {
-      filtered = filtered.filter(insurance =>
-        insurance.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        insurance.cropType.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+  //   // Search filter with null checks
+  //   if (searchTerm)
+  //   {
+  //     filtered = filtered.filter(insurance => {
+  //       const searchLower = searchTerm.toLowerCase();
+  //       return (
+  //         (insurance.name?.toLowerCase() || '').includes(searchLower) ||
+  //         (insurance.description?.toLowerCase() || '').includes(searchLower) ||
+  //         (getCropType(insurance).toLowerCase() || '').includes(searchLower) ||
+  //         (insurance.cropSeason?.toLowerCase() || '').includes(searchLower) ||
+  //         (insurance.regions?.some(region =>
+  //           (region.state?.toLowerCase() || '').includes(searchLower) ||
+  //           (region.district?.toLowerCase() || '').includes(searchLower)
+  //         )) || false
+  //       );
+  //     });
+  //   }
 
-    // Category filter
-    if (activeFilter !== 'all')
-    {
-      filtered = filtered.filter(insurance =>
-        insurance.cropType.toLowerCase() === activeFilter.toLowerCase()
-      );
-    }
+  //   // Category filter
+  //   if (activeFilter !== 'all')
+  //   {
+  //     filtered = filtered.filter(insurance =>
+  //       insurance.cropType.toLowerCase() === activeFilter.toLowerCase()
+  //     );
+  //   }
 
-    // Price range filter
-    filtered = filtered.filter(insurance =>
-      insurance.premium <= priceRange[1] && insurance.premium >= priceRange[0]
-    );
+  //   // Price range filter
+  //   filtered = filtered.filter(insurance =>
+  //     insurance.premium <= priceRange[1] && insurance.premium >= priceRange[0]
+  //   );
 
-    setFilteredInsurances(filtered);
-  }, [searchTerm, activeFilter, priceRange, insurances]);
+  //   setFilteredInsurances(filtered);
+  // }, [searchTerm, activeFilter, priceRange, insurances]);
 
+  // Remove this duplicate useEffect block completely (lines 147-169 in original code)
+  // useEffect(() => {
+  //   if (!insurances.length) return;
+  //   let filtered = [...insurances];
+  //   // ... duplicate logic ...
+  // }, [searchTerm, activeFilter, priceRange, insurances]);
+
+  // Remove the duplicate useEffect hook below (lines 147-169)
   // Fetch data
   useEffect(() => {
     async function getInsurances() {
@@ -144,7 +229,7 @@ const Insurance = () => {
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }} />
         </div>
 
@@ -422,20 +507,7 @@ const Insurance = () => {
                   </span>
                 )}
               </h2>
-              <div className="flex items-center space-x-2 text-sm">
-                <span className="text-gray-600">Sort by:</span>
-                <select
-                  className="border-none bg-transparent text-mycol-sea_green focus:outline-none cursor-pointer"
-                  onChange={(e) => {
-                    // Add sorting logic here
-                  }}
-                >
-                  <option value="premium-low">Premium: Low to High</option>
-                  <option value="premium-high">Premium: High to Low</option>
-                  <option value="coverage">Coverage Amount</option>
-                  <option value="newest">Newest First</option>
-                </select>
-              </div>
+
             </div>
 
             {filteredInsurances.length === 0 ? (
@@ -512,7 +584,7 @@ const Insurance = () => {
                           <div>
                             <p className="text-sm text-gray-600">Crop Type</p>
                             <p className="font-semibold text-mycol-brunswick_green capitalize">
-                              {insurance.cropType}
+                              {getCropType(insurance)}
                             </p>
                           </div>
                           <div>
@@ -611,35 +683,6 @@ const Insurance = () => {
                 ))}
               </div>
             )}
-
-            {/* Pagination if needed */}
-            {/* {filteredInsurances.length > 0 && (
-              <div className="mt-8 flex justify-center">
-                <nav className="flex items-center space-x-2">
-                  <button className="p-2 rounded-lg hover:bg-mycol-nyanza">
-                    <svg className="w-6 h-6 text-mycol-sea_green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  {[1, 2, 3].map((page) => (
-                    <button
-                      key={page}
-                      className={`px-4 py-2 rounded-lg ${page === 1
-                        ? 'bg-mycol-mint text-white'
-                        : 'text-mycol-sea_green hover:bg-mycol-nyanza'
-                        }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button className="p-2 rounded-lg hover:bg-mycol-nyanza">
-                    <svg className="w-6 h-6 text-mycol-sea_green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </nav>
-              </div>
-            )} */}
           </>
         )}
       </div>
@@ -651,150 +694,3 @@ export default Insurance;
 
 
 
-// /* eslint-disable no-unused-vars */
-// import axios from "axios";
-// import { useState, useEffect } from "react";
-// import { Link } from "react-router-dom";
-// import { FaLeaf, FaCalendarAlt, FaMoneyBillWave, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-
-
-
-// const Insurance = () => {
-//   const [insurances, setInsurances] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState(false);
-
-//   useEffect(() => {
-//     async function getInsurances() {
-//       try
-//       {
-//         setIsLoading(true);
-//         setError("");
-//         // Fetch data from API
-//         const response = await axios.get(`http://127.0.0.1:3000/api/v1/insurance`);
-//         console.log("res", response)
-//         if (response.status !== 200) throw new Error("Something went wrong with fetching insurances");
-//         const insurancesData = response.data.data.policies;
-//         if (insurancesData.length === 0) throw new Error("No insurance policies found");
-//         setInsurances(insurancesData);
-//         console.log(insurancesData)
-//         setIsLoading(false);
-//       } catch (err)
-//       {
-//         setError(err.message);
-//         setIsLoading(false);
-//       }
-//     }
-//     getInsurances();
-//   }, []);
-
-//   return (
-//     <div className="bg-gray-50 min-h-screen py-8">
-//       {/* Header Section */}
-//       <div className=" py-2">
-//         <div className="max-w-screen-xl mx-auto px-4 text-center">
-//           <h1 className="text-4xl font-bold text-black mb-4">Crop Insurance Plans</h1>
-//           <p className="text-black text-lg">Protect your crops with our comprehensive insurance policies.</p>
-//         </div>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="max-w-screen-xl mx-auto px-4 py-8">
-//         {isLoading ? (
-//           <div className="text-center text-gray-700">Loading...</div>
-//         ) : error ? (
-//           <div className="text-center text-red-500">{error}</div>
-//         ) : (
-//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 cursor-pointer">
-//             {insurances.map((insurance) => (
-//               <div key={insurance._id} className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-//                 {/* Image Placeholder */}
-//                 {/*<div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url('https://source.unsplash.com/featured/?farm,crops')` }}>
-//                   {/* You can use a static image or a placeholder
-//                 </div>*/}
-
-//                 {/* Policy Content */}
-//                 <div className="p-6">
-//                   <h2 className="text-2xl font-bold text-green-600 mb-2 flex items-center">
-//                     <FaLeaf className="mr-2" /> {insurance.name}
-//                   </h2>
-//                   <p className="text-gray-700 mb-4">{truncateText(insurance.terms_conditions, 120)}</p>
-
-//                   {/* Key Details */}
-//                   <div className="mb-4">
-//                     <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-//                       <FaCalendarAlt className="mr-2 text-blue-500" /> Key Details
-//                     </h3>
-//                     <ul className="text-gray-700">
-//                       <li>
-//                         <strong>Crop Type:</strong> {insurance.cropType}
-//                       </li>
-//                       <li>
-//                         <strong>Max Coverage:</strong> {insurance.sumInsured}
-//                       </li>
-//                       {/* <li>
-//                         <strong>Duration:</strong> {insurance.coverage_details.duration_months} months
-//                       </li> */}
-//                     </ul>
-//                   </div>
-
-//                   {/* Key Benefits */}
-//                   <div className="mb-4">
-//                     <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-//                       <FaMoneyBillWave className="mr-2 text-yellow-500" /> Key Benefits
-//                     </h3>
-//                     <ul className="text-gray-700">
-//                       <li>
-//                         <strong>Premium:</strong> &#8377; {insurance.premium.toLocaleString()}
-//                       </li>
-//                       <li>
-//                         <strong>Agent Visit Fee:</strong> &#8377; {insurance.agentFee.toLocaleString()}
-//                       </li>
-//                     </ul>
-//                   </div>
-
-//                   {/* Status */}
-//                   <div className="flex items-center mb-4">
-//                     {insurance.active ? (
-//                       <span className="flex items-center text-green-600">
-//                         <FaCheckCircle className="mr-1" /> Active
-//                       </span>
-//                     ) : (
-//                       <span className="flex items-center text-red-600">
-//                         <FaTimesCircle className="mr-1" /> Inactive
-//                       </span>
-//                     )}
-//                   </div>
-
-//                   {/* Buttons */}
-//                   <div className="flex justify-between items-center">
-//                     <div className="text-gray-600 text-sm">
-//                       Created on: {new Date(insurance.createdAt).toLocaleDateString("en-GB")}
-//                     </div>
-//                     <div className="flex space-x-2">
-//                       <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300">
-//                         Buy Now
-//                       </button>
-//                       <Link to={`/insurance/${insurance._id}`}>
-//                         <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300">
-//                           View More
-//                         </button>
-//                       </Link>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-
-//             {/* If no insurances are available */}
-//             {insurances.length === 0 && (
-//               <div className="col-span-full text-center text-gray-700">No insurance policies available at the moment.</div>
-//             )}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Insurance;
