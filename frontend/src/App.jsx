@@ -41,6 +41,10 @@ import PaymentSuccess from "./components/DashboardComponents/Farmer/PaymentSucce
 import DiseaseExpert from "./components/Features/AI_Features/DiseaseExpert";
 import GeneralExpert from "./components/Features/AI_Features/GeneralExpert";
 import AdminClaims from "./components/DashboardComponents/Admin/AdminClaims";
+import Forecast from "./components/Features/Forecast";
+import DiseaseLocationReport from "./components/Features/DiseaseLocationReport";
+import NearbyDiseases from "./components/Features/NearbyDiseases";
+import UserManagement from "./components/DashboardComponents/UserManagement";
 
 function App() {
   return (
@@ -91,6 +95,9 @@ function App() {
 
                 <Route path="disease-expert" element={<DiseaseExpert />} />
                 <Route path="general-expert" element={<GeneralExpert />} />
+                <Route path="forecast" element={<Forecast />} />
+                <Route path="disease-report" element={<DiseaseLocationReport />} />
+                <Route path="disease-reports" element={<NearbyDiseases />} />
               </Route>
 
               <Route path="/aboutus" element={<AboutUs />} />
@@ -159,6 +166,14 @@ function App() {
                   element={
                     <ProtectedRoute role="admin">
                       <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="user-management"
+                  element={
+                    <ProtectedRoute role="admin">
+                      <UserManagement />
                     </ProtectedRoute>
                   }
                 />

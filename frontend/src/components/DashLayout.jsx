@@ -105,6 +105,19 @@ const DashLayout = () => {
                   <span>Farmers List</span>
                 </NavLink>
                 <NavLink
+                  to="user-management"
+                  className={({ isActive }) =>
+                    `flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                      isActive
+                        ? "bg-green-500/20 border border-green-500/30"
+                        : "hover:bg-green-500/20"
+                    }`
+                  }
+                >
+                  <UserCircle className="w-5 h-5" />
+                  <span>User Management</span>
+                </NavLink>
+                <NavLink
                   to="allenrollement"
                   className={({ isActive }) =>
                     `flex items-center space-x-3 p-3 rounded-lg transition-colors ${

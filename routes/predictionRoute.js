@@ -107,4 +107,31 @@ router.post(
   }
 );
 
+
+router.post("/forecast", conditionalTranslateMiddleware, async (req, res) => {
+  try {
+    const { year, month } = req.body;
+    
+    if (!year || !month) {
+      return res.status(400).json({ 
+        error: "Year and month are required" 
+      });
+    }
+
+    // Forward to Flask API
+    const response = await axios.post(`${FLASK_SERVER_URL}/forecast`, {
+      year,
+      month
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Forecast Error:", error);
+    res.status(500).json({
+      error: "Sales forecast failed",
+      details: error.message
+    });
+  }
+});
+
 module.exports = router;

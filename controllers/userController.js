@@ -196,3 +196,40 @@ exports.getUserDetails = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+// Update user role - admin only functionality
+exports.updateUserRole = catchAsync(async (req, res, next) => {
+  const { role } = req.body;
+  const userId = req.params.id;
+
+  // Validate role
+  const validRoles = ["user", "admin", "agent", "farmer"];
+  if (!validRoles.includes(role)) {
+    return next(new AppError("Invalid role specified", 400));
+  }
+
+  // Prevent admin from changing their own role
+  if (userId === req.user.id) {
+    return next(new AppError("You cannot change your own role", 403));
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { role },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!updatedUser) {
+    return next(new AppError("No user found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      user: updatedUser,
+    },
+  });
+});

@@ -23,10 +23,13 @@ const Insurance = () => {
   // Categories for filtering
   const categories = [
     { id: "all", name: "All Crops", icon: "🌾" },
-    { id: "cereals", name: "Cereals", icon: "🌾" },
-    { id: "pulses", name: "Pulses", icon: "🫘" },
-    { id: "vegetables", name: "Vegetables", icon: "🥬" },
-    { id: "fruits", name: "Fruits", icon: "🍎" },
+    { id: "Cereals", name: "Cereals", icon: "🌾" },
+    { id: "Pulses", name: "Pulses", icon: "🫘" },
+    { id: "Vegetables", name: "Vegetables", icon: "🥬" },
+    { id: "Fruits", name: "Fruits", icon: "🍎" },
+    { id: "Oilseeds", name: "Oilseeds", icon: "🌱" },
+    { id: "FiberCrops", name: "Fiber Crops", icon: "🧵" },
+    { id: "SpicesAndPlantationCrops", name: "Spices & Plantation", icon: "🌶️" },
   ];
   // // Utility function to truncate text
   const truncateText = (text, limit) => {
@@ -89,20 +92,44 @@ const Insurance = () => {
     let filtered = [...insurances];
 
     // Search filter
-    if (searchTerm)
-    {
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(insurance =>
-        insurance.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        insurance.cropType.toLowerCase().includes(searchTerm.toLowerCase())
+        // Check name
+        insurance.name.toLowerCase().includes(lowerSearchTerm) ||
+        // Check description
+        (insurance.description && insurance.description.toLowerCase().includes(lowerSearchTerm)) ||
+        // Check crop season
+        (insurance.cropSeason && insurance.cropSeason.toLowerCase().includes(lowerSearchTerm)) ||
+        // Check crop categories
+        (insurance.cropDetails && insurance.cropDetails.some(detail => 
+          detail.cropCategory.toLowerCase().includes(lowerSearchTerm)
+        )) ||
+        // Check individual crop types within categories
+        (insurance.cropDetails && insurance.cropDetails.some(detail =>
+          detail.crops && detail.crops.some(crop => 
+            crop.cropType.toLowerCase().includes(lowerSearchTerm)
+          )
+        ))
       );
     }
 
     // Category filter
-    if (activeFilter !== 'all')
-    {
-      filtered = filtered.filter(insurance =>
-        insurance.cropType.toLowerCase() === activeFilter.toLowerCase()
-      );
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(insurance => {
+        // Check if insurance has cropDetails
+        if (insurance.cropDetails && insurance.cropDetails.length > 0) {
+          // Check if any category matches the filter
+          return insurance.cropDetails.some(detail => 
+            detail.cropCategory.toLowerCase() === activeFilter.toLowerCase()
+          );
+        }
+        // Fallback to cropType if it exists for backward compatibility
+        if (insurance.cropType) {
+          return insurance.cropType.toLowerCase() === activeFilter.toLowerCase();
+        }
+        return false;
+      });
     }
 
     // Price range filter
@@ -111,25 +138,31 @@ const Insurance = () => {
     );
 
     setFilteredInsurances(filtered);
+    console.log("Filtered insurances:", filtered);
   }, [searchTerm, activeFilter, priceRange, insurances]);
 
   // Fetch data
   useEffect(() => {
     async function getInsurances() {
-      try
-      {
+      try {
         setIsLoading(true);
         setError("");
         const response = await axios.get(`/api/v1/insurance`);
         if (response.status !== 200) throw new Error("Something went wrong with fetching insurances");
         const insurancesData = response.data.data.policies;
         if (insurancesData.length === 0) throw new Error("No insurance policies found");
-        console.log(response)
+        console.log("Insurance API response:", response.data);
+        
+        // Add some debug logging to inspect the structure
+        if (insurancesData.length > 0) {
+          console.log("Sample insurance structure:", JSON.stringify(insurancesData[0], null, 2));
+        }
+        
         setInsurances(insurancesData);
         setFilteredInsurances(insurancesData);
         setIsLoading(false);
-      } catch (err)
-      {
+      } catch (err) {
+        console.error("Error fetching insurance data:", err);
         setError(err.message);
         setIsLoading(false);
       }

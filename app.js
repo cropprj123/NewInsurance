@@ -12,6 +12,7 @@ const paymentRouter = require("./routes/paymentRoute");
 const claimRouter = require("./routes/claimRoute");
 const chatRouter = require("./routes/chatRoute");
 const dashboardRouter = require("./routes/dashboardRoute");
+const diseaseLocationRouter = require("./routes/diseaseLocationRoute");
 const AppError = require("./utils/appErrors");
 
 const app = express();
@@ -47,8 +48,9 @@ app.use("/api/v1/location", UserlocationRouter);
 app.use("/api/v1/claim", claimRouter);
 app.use("/api/v1/ai", chatRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
-
+app.use("/api/v1/farmer-disease-locations", diseaseLocationRouter);
 app.use("/api/v1/payment", paymentRouter);
+
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find the ${req.originalUrl} url`));
 });

@@ -20,8 +20,16 @@ router.patch(
 );
 router.patch("/updateMyPassword", authController.updatePassword);
 router.use(authController.protect);
-router.use(authController.restrictTo("admin", "agent"));
 
+// Admin-only routes
+router.patch(
+  "/update-role/:id",
+  authController.restrictTo("admin"),
+  userController.updateUserRole
+);
+
+// Routes for admins and agents
+router.use(authController.restrictTo("admin", "agent"));
 router.route("/").get(userController.getalluser);
 router.get("/:id", userController.getUserDetails);
 module.exports = router;

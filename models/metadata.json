@@ -1,0 +1,41 @@
+{
+  "models": [
+    {
+      "product": "organic kala namk rice",
+      "file": "organic_kala_namk_rice_model.joblib"
+    },
+    {
+      "product": "Organic NPK 10-26-26",
+      "file": "Organic_NPK_10-26-26_model.joblib"
+    },
+    {
+      "product": "NPK 14-35-14 for Plants",
+      "file": "NPK_14-35-14_for_Plants_model.joblib"
+    },
+    {
+      "product": "Handpicked Unpolished Red KidneyBeans",
+      "file": "Handpicked_Unpolished_Red_KidneyBeans_model.joblib"
+    },
+    {
+      "product": "Urban Gardeners Ber seeds- Apple",
+      "file": "Urban_Gardeners_Ber_seeds-_Apple_model.joblib"
+    },
+    {
+      "product": "IFFCO NANO DAP",
+      "file": "IFFCO_NANO_DAP_model.joblib"
+    },
+    {
+      "product": "TrustBasket Coconut Plant Fertilizer",
+      "file": "TrustBasket_Coconut_Plant_Fertilizer_model.joblib"
+    },
+    {
+      "product": "Taiyo Mango Protection",
+      "file": "Taiyo_Mango_Protection_model.joblib"
+    },
+    {
+      "product": "Banana Bunch Cover",
+      "file": "Banana_Bunch_Cover_model.joblib"
+    }
+  ],
+  "created_at": "2025-03-02T08:17:39.628337"
+}

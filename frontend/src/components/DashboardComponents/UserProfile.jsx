@@ -108,12 +108,14 @@ const UserProfile = () => {
         },
       });
 
-      if (response.data.status === "success") {
+      console.log("Photo update response:", response.data);
+
+      if (response.data && response.data.status === "success") {
         setUser(response.data.data.user);
         setPhotoPreview(null);
         toast.success("Profile photo updated successfully");
       } else {
-        toast.error(response.data.message || "Failed to update photo");
+        toast.error(response.data?.message || "Failed to update photo");
         setPhotoPreview(null);
       }
     } catch (error) {
@@ -146,12 +148,14 @@ const UserProfile = () => {
         }
       );
 
-      if (response.data.status === "success") {
+      console.log("Profile update response:", response.data);
+      
+      if (response.data && response.data.status === "success") {
         setUser(response.data.data.user);
         setIsEditing(false);
         toast.success("Profile updated successfully");
       } else {
-        toast.error(response.data.message || "Failed to update profile");
+        toast.error(response.data?.message || "Failed to update profile");
       }
     } catch (error) {
       console.error("Update error:", error);

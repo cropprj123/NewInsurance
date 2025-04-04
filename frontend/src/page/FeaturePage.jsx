@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Leaf, Sprout, Cloud, ChartAreaIcon, Brain } from "lucide-react";
+import { Leaf, Sprout, Cloud, ChartAreaIcon, Brain, CloudRain, MapPin, Search } from "lucide-react";
 import { FaBriefcaseMedical } from "react-icons/fa";
 
 // todo : make this layout responsive
@@ -26,18 +26,6 @@ const FeaturesPage = () => {
               <span>Disease Detection</span>
             </NavLink>
             <NavLink
-              to="/features/soil"
-              className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
-                  ? "bg-green-500/20 border border-green-500/30"
-                  : "hover:bg-green-500/20"
-                }`
-              }
-            >
-              <Sprout className="w-5 h-5" />
-              <span>Soil Analysis</span>
-            </NavLink>
-            <NavLink
               to="/features/weather"
               className={({ isActive }) =>
                 `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
@@ -49,6 +37,19 @@ const FeaturesPage = () => {
               <Cloud className="w-5 h-5" />
               <span>crop video analysis</span>
             </NavLink>
+            <NavLink
+              to="/features/soil"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
+                }`
+              }
+            >
+              <Sprout className="w-5 h-5" />
+              <span>Soil Analysis</span>
+            </NavLink>
+
             <NavLink
               to="/features/crop-recommendation"
               className={({ isActive }) =>
@@ -98,6 +99,45 @@ const FeaturesPage = () => {
             >
               <FaBriefcaseMedical className="w-5 h-5" />
               <span>Disease AI-Expert </span>
+            </NavLink>
+
+            <NavLink
+              to="/features/forecast"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
+                }`
+              }
+            >
+              <CloudRain className="w-5 h-5" />
+              <span>Forecast</span>
+            </NavLink>
+
+            <NavLink
+              to="/features/disease-report"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
+                }`
+              }
+            >
+              <MapPin className="w-5 h-5" />
+              <span>Report Disease</span>
+            </NavLink>
+
+            <NavLink
+              to="/features/disease-reports"
+              className={({ isActive }) =>
+                `flex items-center space-x-3 p-3 rounded-lg transition-colors ${isActive
+                  ? "bg-green-500/20 border border-green-500/30"
+                  : "hover:bg-green-500/20"
+                }`
+              }
+            >
+              <Search className="w-5 h-5" />
+              <span>Nearby Diseases</span>
             </NavLink>
           </nav>
         </div>
