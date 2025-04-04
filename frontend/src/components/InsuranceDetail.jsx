@@ -69,10 +69,9 @@ const InsuranceDetail = () => {
     try
     {
       setIsLoading(true);
-      const response = await axios.post(`/api/v1/assign/create/${id}`, {
+      const response = await axios.post(`/api/v1/assign/create/${id}`, {}, {
         withCredentials: true
       });
-      console.log("res api ", response)
 
       if (response.data.status === 'success')
       {
@@ -89,7 +88,7 @@ const InsuranceDetail = () => {
       }
     } catch (err)
     {
-      if (err.response?.data?.message?.includes('already applied'))
+      if (err.response?.data?.includes('already applied'))
       {
         toast.error('You have already applied for this insurance policy', {
           duration: 4000,
