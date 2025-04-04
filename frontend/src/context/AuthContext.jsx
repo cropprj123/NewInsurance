@@ -32,6 +32,36 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, []);
 
+    // Add updateUser function to handle profile updates
+    const updateUser = async (userData, isFormData = false) => {
+        try
+        {
+            const config = {
+                headers: {
+                    "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+                }
+            };
+
+            const response = await api.patch('/users/updateme', userData, config);
+
+            if (response.data.status === 'success')
+            {
+                // Update the user state with the new data
+                setUser(response.data.data.user);
+                return { success: true, user: response.data.data.user };
+            }
+
+            return { success: false, message: response.data.message || 'Update failed' };
+        } catch (err)
+        {
+            console.error("Error in AuthProvider updateUser", err.message);
+            return {
+                success: false,
+                message: err.response?.data?.message || 'Update failed'
+            };
+        }
+    };
+
     const login = async (emailOrPhone, password) => {
         try
         {
@@ -84,7 +114,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, loading, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

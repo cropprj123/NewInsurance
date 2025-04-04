@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import {
   User,
@@ -23,7 +23,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const UserProfile = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, updateUser } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     ...user,
@@ -32,6 +32,14 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Add this useEffect to update the editedUser state when user changes
+  useEffect(() => {
+    setEditedUser({
+      ...user,
+      address: user.address || {},
+    });
+  }, [user]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -46,7 +54,8 @@ const UserProfile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name.startsWith("address.")) {
+    if (name.startsWith("address."))
+    {
       const addressField = name.split(".")[1];
       setEditedUser((prev) => ({
         ...prev,
@@ -55,7 +64,8 @@ const UserProfile = () => {
           [addressField]: value,
         },
       }));
-    } else {
+    } else
+    {
       setEditedUser((prev) => ({
         ...prev,
         [name]: value,
@@ -64,33 +74,137 @@ const UserProfile = () => {
   };
 
   const validateForm = () => {
-    if (!editedUser.name || !editedUser.email) {
+    if (!editedUser.name || !editedUser.email)
+    {
       toast.error("Name and email are required");
       return false;
     }
-    if (editedUser.email && !/\S+@\S+\.\S+/.test(editedUser.email)) {
+    if (editedUser.email && !/\S+@\S+\.\S+/.test(editedUser.email))
+    {
       toast.error("Please enter a valid email address");
       return false;
     }
     return true;
   };
 
+  // const handlePhotoChange = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   if (!file.type.startsWith("image/"))
+  //   {
+  //     toast.error("Please upload an image file");
+  //     return;
+  //   }
+
+  //   const maxSize = 5 * 1024 * 1024;
+  //   if (file.size > maxSize)
+  //   {
+  //     toast.error("Image size should be less than 5MB");
+  //     return;
+  //   }
+
+  //   try
+  //   {
+  //     setLoading(true);
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setPhotoPreview(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+
+  //     const formData = new FormData();
+  //     formData.append("photo", file);
+
+  //     const response = await axios.patch("/api/v1/users/updateme", formData, {
+  //       withCredentials: true,
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+
+  //     console.log("Photo update response:", response.data);
+
+  //     if (response.data && response.data.status === "success")
+  //     {
+  //       setUser(response.data.data.user);
+  //       setPhotoPreview(null);
+  //       toast.success("Profile photo updated successfully");
+  //     } else
+  //     {
+  //       toast.error(response.data?.message || "Failed to update photo");
+  //       setPhotoPreview(null);
+  //     }
+  //   } catch (error)
+  //   {
+  //     console.error("Upload error:", error);
+  //     toast.error(error.response?.data?.message || "Failed to update photo");
+  //     setPhotoPreview(null);
+  //   } finally
+  //   {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // In UserProfile.jsx, update the handleSave and handlePhotoChange functions
+
+  const handleSave = async () => {
+    if (!validateForm()) return;
+
+    try
+    {
+      setLoading(true);
+
+      const userData = {
+        name: editedUser.name,
+        email: editedUser.email,
+        phone: editedUser.phone,
+        address: editedUser.address,
+      };
+
+      // Use the updateUser function from context instead of direct axios call
+      const { success, message, user: updatedUser } = await updateUser(userData);
+
+      if (success)
+      {
+        // No need to manually update user state as it's handled in the context
+        // Just update the local editedUser state to match
+        setEditedUser({ ...updatedUser, address: updatedUser.address || {} });
+        toast.success("Profile updated successfully");
+      } else
+      {
+        toast.error(message || "Failed to update profile");
+      }
+    } catch (error)
+    {
+      console.error("Update error:", error);
+      toast.error("Failed to update profile");
+    } finally
+    {
+      setIsEditing(false);
+      setLoading(false);
+    }
+  };
+
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith("image/"))
+    {
       toast.error("Please upload an image file");
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
+    if (file.size > maxSize)
+    {
       toast.error("Image size should be less than 5MB");
       return;
     }
 
-    try {
+    try
+    {
       setLoading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -101,66 +215,25 @@ const UserProfile = () => {
       const formData = new FormData();
       formData.append("photo", file);
 
-      const response = await axios.patch("/api/v1/users/updateme", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Use the updateUser function with formData flag
+      const { success, message } = await updateUser(formData, true);
 
-      console.log("Photo update response:", response.data);
-
-      if (response.data && response.data.status === "success") {
-        setUser(response.data.data.user);
+      if (success)
+      {
         setPhotoPreview(null);
         toast.success("Profile photo updated successfully");
-      } else {
-        toast.error(response.data?.message || "Failed to update photo");
+      } else
+      {
+        toast.error(message || "Failed to update photo");
         setPhotoPreview(null);
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Upload error:", error);
-      toast.error(error.response?.data?.message || "Failed to update photo");
+      toast.error("Failed to update photo");
       setPhotoPreview(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!validateForm()) return;
-
-    try {
-      setLoading(true);
-      const response = await axios.patch(
-        "/api/v1/users/updateme",
-        {
-          name: editedUser.name,
-          email: editedUser.email,
-          phone: editedUser.phone,
-          address: editedUser.address,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Profile update response:", response.data);
-      
-      if (response.data && response.data.status === "success") {
-        setUser(response.data.data.user);
-        setIsEditing(false);
-        toast.success("Profile updated successfully");
-      } else {
-        toast.error(response.data?.message || "Failed to update profile");
-      }
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error(error.response?.data?.message || "Failed to update profile");
-    } finally {
+    } finally
+    {
       setLoading(false);
     }
   };
@@ -209,11 +282,10 @@ const UserProfile = () => {
             whileTap={{ scale: 0.95 }}
             onClick={isEditing ? handleSave : handleEdit}
             disabled={loading}
-            className={`flex items-center space-x-2 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${
-              isEditing
-                ? "bg-gradient-to-r from-mycol-sea_green to-mycol-dartmouth_green text-white"
-                : "bg-gradient-to-r from-mycol-mint to-mycol-mint-2 text-white"
-            }`}
+            className={`flex items-center space-x-2 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${isEditing
+              ? "bg-gradient-to-r from-mycol-sea_green to-mycol-dartmouth_green text-white"
+              : "bg-gradient-to-r from-mycol-mint to-mycol-mint-2 text-white"
+              }`}
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

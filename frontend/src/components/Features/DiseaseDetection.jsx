@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import ProcessingAnimation from "../ProcessingAnimation";
 import DiseasesPanel from "./DiseasesPanel";
 import axios from "axios";
+import Webcam from "react-webcam"; // Add this import
 import {
   Upload,
   AlertCircle,
@@ -35,8 +36,8 @@ const DiseaseDetection = () => {
   const [isUsingCamera, setIsUsingCamera] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [suggestedProducts, setSuggestedProducts] = useState([]);
-  const videoRef = useRef(null);
-  const streamRef = useRef(null);
+  const webcamRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Add this array for processing steps
   const processingSteps = [
@@ -47,44 +48,26 @@ const DiseaseDetection = () => {
   ];
 
   // Function to start camera
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      videoRef.current.srcObject = stream;
-      streamRef.current = stream;
-      setIsUsingCamera(true);
-      setSelectedImage(null);
-      setError("");
-    } catch (err) {
-      setError('Failed to access camera. Please make sure you have granted camera permissions.');
-      console.error('Error accessing camera:', err);
-    }
+  const startCamera = () => {
+    setIsUsingCamera(true);
+    setSelectedImage(null);
+    setError("");
   };
 
   // Function to stop camera
   const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-      videoRef.current.srcObject = null;
-      setIsUsingCamera(false);
-    }
+    setIsUsingCamera(false);
   };
 
   // Function to capture photo from camera
-  const capturePhoto = () => {
-    if (!videoRef.current || !streamRef.current) return;
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(videoRef.current, 0, 0);
-    
-    const imageDataUrl = canvas.toDataURL('image/jpeg');
-    setSelectedImage(imageDataUrl);
-    stopCamera();
-  };
+  const handleCameraCapture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (imageSrc)
+    {
+      setSelectedImage(imageSrc);
+      setIsUsingCamera(false);
+    }
+  }, [webcamRef]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -93,7 +76,7 @@ const DiseaseDetection = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setSelectedImage(reader.result);
-      stopCamera(); // Stop camera if it's running
+      setIsUsingCamera(false); // Stop camera if it's running
     };
     reader.readAsDataURL(file);
   };
@@ -105,25 +88,28 @@ const DiseaseDetection = () => {
   };
 
   const fetchProductsByName = async (name) => {
-    try {
+    try
+    {
       // Search for the exact product name
       const response = await axios.get(`http://localhost:5173/api/v1/crops/search?name=${encodeURIComponent(name)}`);
       console.log('Search response for:', name, response.data);
-      
+
       // Filter products to match exact name (case-insensitive)
-      const exactMatches = response.data.data.crop.filter(product => 
+      const exactMatches = response.data.data.crop.filter(product =>
         product.name.toLowerCase() === name.toLowerCase()
       );
-      
+
       return exactMatches;
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error fetching products:', error);
       return [];
     }
   };
 
   const handleSubmit = async () => {
-    if (!selectedImage) {
+    if (!selectedImage)
+    {
       setError("Please select or capture an image first");
       return;
     }
@@ -141,9 +127,11 @@ const DiseaseDetection = () => {
 
     formData.append("image", file);
 
-    try {
+    try
+    {
       // Simulate steps with delays
-      for (let step of processingSteps) {
+      for (let step of processingSteps)
+      {
         setProcessingStep(step.id);
         await new Promise((resolve) => setTimeout(resolve, step.delay));
       }
@@ -155,7 +143,8 @@ const DiseaseDetection = () => {
       };
 
       // Only add language parameter if it's not English
-      if (selectedLanguage !== "en") {
+      if (selectedLanguage !== "en")
+      {
         config.params = { lang: selectedLanguage };
       }
 
@@ -169,17 +158,20 @@ const DiseaseDetection = () => {
       setActiveTab('overview');
 
       // Fetch product recommendations if available
-      if (response.data.predictions[0]?.info?.recommendedProducts) {
+      if (response.data.predictions[0]?.info?.recommendedProducts)
+      {
         const recommendedProducts = response.data.predictions[0].info.recommendedProducts;
         const productResults = await Promise.all(
           recommendedProducts.map(productName => fetchProductsByName(productName))
         );
         setSuggestedProducts(productResults.flat().filter(Boolean));
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error detecting crop disease:", error);
       setError("Failed to detect crop disease. Please try again.");
-    } finally {
+    } finally
+    {
       setIsSubmitted(false);
       setProcessingStep(null);
     }
@@ -188,11 +180,10 @@ const DiseaseDetection = () => {
   const TabButton = ({ id, label, active, icon: Icon }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-        active
-          ? 'bg-mycol-mint text-white'
-          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-      }`}
+      className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${active
+        ? 'bg-mycol-mint text-white'
+        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+        }`}
     >
       <Icon className="w-4 h-4" />
       <span>{label}</span>
@@ -283,35 +274,7 @@ const DiseaseDetection = () => {
                 <div className="space-y-6">
                   {!isSubmitted ? (
                     <>
-                      {/* Camera View */}
-                      {isUsingCamera && (
-                        <div className="relative">
-                          <video
-                            ref={videoRef}
-                            autoPlay
-                            playsInline
-                            className="w-full h-64 rounded-lg border border-mycol-celadon bg-black"
-                          />
-                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
-                            <button
-                              onClick={capturePhoto}
-                              className="px-4 py-2 bg-mycol-mint text-white rounded-lg flex items-center space-x-2"
-                            >
-                              <Camera className="w-5 h-5" />
-                              <span>Capture</span>
-                            </button>
-                            <button
-                              onClick={stopCamera}
-                              className="px-4 py-2 bg-red-500 text-white rounded-lg flex items-center space-x-2"
-                            >
-                              <X className="w-5 h-5" />
-                              <span>Cancel</span>
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Upload Area - Only shown when camera is not active */}
+                      {/* Upload Area - Only shown when camera is not active and no image selected */}
                       {!isUsingCamera && !selectedImage && (
                         <div className="relative">
                           <input
@@ -320,6 +283,7 @@ const DiseaseDetection = () => {
                             onChange={handleImageUpload}
                             className="hidden"
                             id="image-upload"
+                            ref={fileInputRef}
                           />
                           <label
                             htmlFor="image-upload"
@@ -390,7 +354,33 @@ const DiseaseDetection = () => {
 
                 {/* Right Column - Image Preview */}
                 <div className="relative">
-                  {selectedImage ? (
+                  {/* Camera View - Moved to right column */}
+                  {isUsingCamera ? (
+                    <div className="relative h-64">
+                      <Webcam
+                        audio={false}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        className="w-full h-64 rounded-lg border border-mycol-celadon"
+                      />
+                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                        <button
+                          onClick={handleCameraCapture}
+                          className="px-4 py-2 bg-mycol-mint text-white rounded-lg flex items-center space-x-2"
+                        >
+                          <Camera className="w-5 h-5" />
+                          <span>Capture</span>
+                        </button>
+                        <button
+                          onClick={stopCamera}
+                          className="px-4 py-2 bg-red-500 text-white rounded-lg flex items-center space-x-2"
+                        >
+                          <X className="w-5 h-5" />
+                          <span>Cancel</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : selectedImage ? (
                     <div className="relative h-64 rounded-lg overflow-hidden">
                       <img
                         src={selectedImage}
@@ -418,6 +408,7 @@ const DiseaseDetection = () => {
                       <p className="text-gray-800">Preview will appear here</p>
                     </div>
                   )}
+
                   {/* Submit Button */}
                   {selectedImage && !isSubmitted && (
                     <button
@@ -441,7 +432,7 @@ const DiseaseDetection = () => {
                   {prediction.disease}
                 </h2>
                 <p className="text-gray-600">{prediction.info.scientificName}</p>
-                
+
                 {/* Confidence Indicator */}
                 <div className="mt-4">
                   <p className="text-sm text-gray-600 mb-1">Detection Confidence</p>
@@ -678,7 +669,7 @@ const DiseaseDetection = () => {
         {/* Side Panels */}
         <div>
           <DiseasesPanel />
-          
+
           {/* Recommended Products Panel */}
           {prediction && suggestedProducts.length > 0 && (
             <div className="fixed right-6 top-[calc(50%+80px)] w-80 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-10 hidden md:block">
@@ -689,7 +680,7 @@ const DiseaseDetection = () => {
                 </h3>
                 <p className="text-sm text-white/80 mt-1">Products for this disease</p>
               </div>
-              
+
               <div className="p-3 max-h-[400px] overflow-y-auto">
                 <div className="space-y-3">
                   {suggestedProducts.map((product, index) => (
@@ -701,10 +692,10 @@ const DiseaseDetection = () => {
                       className="flex items-center gap-3 p-3 rounded-lg bg-white border border-gray-200 hover:border-mycol-mint hover:shadow-md transition-all duration-200"
                     >
                       <div className="h-16 w-16 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
-                        <img 
-                          src={product.image || 'https://placehold.co/200x200?text=Product'} 
+                        <img
+                          src={product.image || 'https://placehold.co/200x200?text=Product'}
                           alt={product.name}
-                          className="w-full h-full object-cover" 
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -739,10 +730,10 @@ const DiseaseDetection = () => {
                     className="flex items-center gap-3 p-3 rounded-lg bg-white border border-gray-200 hover:border-mycol-mint hover:shadow-md transition-all duration-200"
                   >
                     <div className="h-16 w-16 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
-                      <img 
-                        src={product.image || 'https://placehold.co/200x200?text=Product'} 
+                      <img
+                        src={product.image || 'https://placehold.co/200x200?text=Product'}
                         alt={product.name}
-                        className="w-full h-full object-cover" 
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
