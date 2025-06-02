@@ -12,6 +12,7 @@ const paymentRouter = require("./routes/paymentRoute");
 const claimRouter = require("./routes/claimRoute");
 const chatRouter = require("./routes/chatRoute");
 const dashboardRouter = require("./routes/dashboardRoute");
+// const authRouter = require("./routes/authRoute");
 const AppError = require("./utils/appErrors");
 
 const app = express();
@@ -38,6 +39,7 @@ app.use(
   })
 );
 
+// app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/insurance", insuranceRouter);
 app.use("/api/v1/crops", cropRouter);

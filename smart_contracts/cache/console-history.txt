@@ -1,0 +1,14 @@
+exit
+await counter.getCount().toString();
+const current = await counter.getCount();
+const counter_new = await Counter.attach("0x10341a70414985D9a8181244E80c547450472F79");
+const counter = await Counter.attach("0x10341a70414985D9a8181244E80c547450472F79");
+const counter = await Counter.attach("0xYourContractAddress");
+const Counter = await ethers.getContractFactory("Counter");
+exit
+que
+exit
+const counter = await Counter.atach(" 0x10341a70414985D9a8181244E80c547450472F79");
+const Counter = await ethers.getContractFactory("Counter");
+const counter = await Counter.attach(" 0x10341a70414985D9a8181244E80c547450472F79");
+const counter = await ethers.getContractFactory("Counter");

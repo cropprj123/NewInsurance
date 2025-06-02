@@ -6,6 +6,10 @@ const AppError = require("../utils/appError");
 const axios = require("axios");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+const blockchainService = require("../services/blockchainService");
+const exifr = require("exifr");
+const fs = require("fs");
+const path = require("path");
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {
@@ -336,3 +340,118 @@ exports.getAdminClaimStatus = catchAsync(async (req, res, next) => {
     },
   });
 });
+class ClaimController {
+  async processClaim(req, res) {
+    try {
+      const { policyId, images } = req.body;
+      const farmerAddress = req.user.address; // Assuming user's address is stored in the request
+
+      // 1. Extract metadata from images
+      const metadata = await this.extractMetadata(images);
+
+      // 2. Get location from metadata
+      const location = {
+        latitude: metadata.latitude,
+        longitude: metadata.longitude,
+      };
+
+      // 3. Get weather data
+      const weatherData = await this.getWeatherData(location);
+
+      // 4. Get threshold value from blockchain
+      const policy = await blockchainService.getPolicy(policyId);
+      const thresholdValue = policy.thresholdValue;
+
+      // 5. Compare weather data with threshold
+      const weatherValue = this.calculateWeatherValue(weatherData);
+      const isEligible = weatherValue >= thresholdValue;
+
+      // 6. Submit claim to blockchain
+      const claimId = await blockchainService.submitClaim(
+        policyId,
+        weatherValue,
+        process.env.ADMIN_PRIVATE_KEY
+      );
+
+      // 7. Process the claim
+      await blockchainService.processClaim(
+        claimId,
+        process.env.ADMIN_PRIVATE_KEY
+      );
+
+      // 8. Get final claim status
+      const claim = await blockchainService.getClaim(claimId);
+
+      res.status(200).json({
+        success: true,
+        data: {
+          claimId,
+          weatherValue,
+          thresholdValue,
+          isEligible,
+          status: claim.status,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async extractMetadata(images) {
+    const metadata = {
+      latitude: null,
+      longitude: null,
+      timestamp: null,
+    };
+
+    for (const image of images) {
+      try {
+        const imagePath = path.join(__dirname, "../uploads", image.filename);
+        const exifData = await exifr.parse(imagePath);
+
+        if (exifData && exifData.latitude && exifData.longitude) {
+          metadata.latitude = exifData.latitude;
+          metadata.longitude = exifData.longitude;
+          metadata.timestamp = exifData.DateTimeOriginal;
+          break;
+        }
+      } catch (error) {
+        console.error("Error extracting metadata:", error);
+      }
+    }
+
+    return metadata;
+  }
+
+  async getWeatherData(location) {
+    try {
+      const response = await axios.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        {
+          params: {
+            lat: location.latitude,
+            lon: location.longitude,
+            appid: process.env.OPENWEATHER_API_KEY,
+            units: "metric",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+      throw error;
+    }
+  }
+
+  calculateWeatherValue(weatherData) {
+    // This is a simplified example. You might want to consider multiple factors
+    // like temperature, humidity, rainfall, etc.
+    return weatherData.main.temp;
+  }
+}
+
+module.exports = new ClaimController();

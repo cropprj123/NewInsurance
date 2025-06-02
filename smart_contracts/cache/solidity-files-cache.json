@@ -1,0 +1,77 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\Agro360_GGSPS\\NewInsurance\\smart_contracts\\contracts\\Counter.sol": {
+      "lastModificationDate": 1744652896001,
+      "contentHash": "060320dd7108b2ac9cda3738bbf8fddb",
+      "sourceName": "contracts/Counter.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.28"
+      ],
+      "artifacts": [
+        "Counter"
+      ]
+    },
+    "D:\\Agro360_GGSPS\\NewInsurance\\smart_contracts\\contracts\\InsuranceContract.sol": {
+      "lastModificationDate": 1745095551775,
+      "contentHash": "fa6be9e3d03a182b7a56bdd1dee9c5c6",
+      "sourceName": "contracts/InsuranceContract.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.28"
+      ],
+      "artifacts": [
+        "InsuranceContract"
+      ]
+    }
+  }
+}

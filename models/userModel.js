@@ -12,15 +12,14 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "name of the user is compulsory"],
+      required: [true, "Please tell us your name!"],
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "An email is must"],
+      required: [true, "Please provide your email"],
       unique: true,
       lowercase: true,
-      validate: [validator.isEmail, "please provide a valid email"],
     },
     phone: {
       type: String,
@@ -39,31 +38,29 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "agent", "admin"],
-      default: "user",
+      enum: ["farmer", "admin", "agent"],
+      default: "farmer",
     },
     password: {
       type: String,
-      required: [true, "A password is must"],
+      required: [true, "Please provide a password"],
       minlength: 8,
       select: false,
     },
     active: {
+      type: Boolean,
       default: true,
       select: false,
-      type: Boolean,
     },
 
     passwordConfirm: {
       type: String,
-      required: [true, "please confirm your password"],
-      minlength: 8,
-
+      required: [true, "Please confirm your password"],
       validate: {
         validator: function (el) {
           return el === this.password;
         },
-        message: "password are no the same",
+        message: "Passwords are not the same!",
       },
       select: false,
     },
@@ -135,7 +132,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-  this.password = await bcrypt.hash(this.password, 9);
+  this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
 });
