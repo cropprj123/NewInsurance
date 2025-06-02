@@ -38,9 +38,16 @@ class BlockchainService {
         endDate
       );
 
-      await tx.wait();
-      console.log("Policy created!");
-      return true;
+      const receipt = await tx.wait();
+      // Find the PolicyCreated event in the logs
+      const event = receipt.events.find((e) => e.event === "PolicyCreated");
+      if (event && event.args && event.args.policyId) {
+        const policyId = event.args.policyId.toNumber();
+        console.log("Policy created! ID:", policyId);
+        return policyId;
+      } else {
+        throw new Error("PolicyCreated event not found in transaction receipt");
+      }
     } catch (error) {
       console.error("Error creating policy:", error);
       throw error;

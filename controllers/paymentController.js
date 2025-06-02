@@ -155,7 +155,7 @@ exports.createPremiumPaymentCheckout = catchAsync(async (req, res, next) => {
         "Blockchain policy creation failed: No policyId returned"
       );
     }
-
+    console.log("Returned policyId from blockchain:", policyId);
     // Update payment record with blockchain policy ID
     paymentRecord.blockchainPolicyId = policyId;
     await paymentRecord.save();

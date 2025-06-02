@@ -10,7 +10,7 @@ async function main() {
   const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
 
   // Replace 0 with the actual policy ID you want to fetch
-  const policyId = 8;
+  const policyId = 9;
   const policy = await contract.getPolicy(policyId);
 
   // Format and print the policy details
