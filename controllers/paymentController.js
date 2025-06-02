@@ -4,6 +4,7 @@ const InsurancePremiumPayment = require("../models/paymentModel");
 const catchAsync = require("../utils/catchAsync"); // Adjust path as needed
 const AppError = require("../utils/appError"); // Adjust path as needed
 const Email = require("./../utils/email");
+const blockchainService = require("../services/blockchainService");
 exports.getInsurancePremiumCheckoutSession = catchAsync(
   async (req, res, next) => {
     const { enrollmentId } = req.params;
@@ -127,9 +128,51 @@ exports.createPremiumPaymentCheckout = catchAsync(async (req, res, next) => {
     },
   });
 
+  // Create blockchain policy after successful payment
+  let policyId;
+  try {
+    // Check for admin private key
+    if (!process.env.ADMIN_PRIVATE_KEY) {
+      throw new Error("Admin private key is missing in environment variables");
+    }
+    policyId = await blockchainService.createPolicy(
+      // User's blockchain address
+      process.env.ADMIN_PRIVATE_KEY,
+      enrollmentData.farmerDetails.name, // Store username instead of policy name
+      // paymentRecord._id, // Using MongoDB payment ID as threshold
+      25,
+      Math.floor(
+        enrollmentData.policyDetails.seasonDates.startDate.getTime() / 1000
+      ), // Convert to unix timestamp
+      Math.floor(
+        enrollmentData.policyDetails.seasonDates.endDate.getTime() / 1000
+      )
+      // Pass admin key to create policy
+    );
+
+    if (!policyId) {
+      throw new Error(
+        "Blockchain policy creation failed: No policyId returned"
+      );
+    }
+
+    // Update payment record with blockchain policy ID
+    paymentRecord.blockchainPolicyId = policyId;
+    await paymentRecord.save();
+  } catch (error) {
+    console.error("Blockchain policy creation failed:", error);
+    // Remove the payment record if blockchain failed
+    await InsurancePremiumPayment.findByIdAndDelete(paymentRecord._id);
+    return res.status(500).json({
+      status: "fail",
+      message: "Blockchain policy creation failed. Payment not processed.",
+      error: error.message,
+    });
+  }
+
   const url = `${req.protocol}://localhost:5173/profile`;
-  const email = new Email(req.user, url);
-  await email.sendBookingReceipt(paymentRecord);
+  // const email = new Email(req.user, url);
+  // await email.sendBookingReceipt(paymentRecord);
   res.status(201).json({
     status: "success",
     message: "Insurance premium payment recorded successfully",

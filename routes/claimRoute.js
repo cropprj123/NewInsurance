@@ -42,11 +42,11 @@ router.get(
 );
 
 // Process claim with images
-router.post(
-  "/process",
-  uploadMulter.array("images", 5), // Allow up to 5 images
-  claimController.processClaim
-);
+// router.post(
+//   "/process",
+//   uploadMulter.array("images", 5) // Allow up to 5 images
+//   // claimController.processClaim
+// );
 
 // Get claim status
 router.get("/:claimId", async (req, res) => {

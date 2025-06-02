@@ -81,6 +81,10 @@ const insurancePremiumPaymentSchema = new mongoose.Schema(
       status: String,
       paymentDate: Date,
     },
+    blockchainPolicyId: {
+      type: Number,
+      default: null,
+    },
   },
   {
     timestamps: true,

@@ -24,7 +24,7 @@ async function main() {
   const tx = await contract.createPolicy(
     wallet.address,
     "Wheat", // cropType
-    25, // thresholdValue
+    50, // thresholdValue
     Math.floor(Date.now() / 1000), // startDate (now)
     Math.floor(Date.now() / 1000) + 86400 // endDate (1 day later)
   );
@@ -35,7 +35,7 @@ async function main() {
   //   console.log(policy);
 
   //fromated policay data
-  const policy = await contract.getPolicy(0);
+  const policy = await contract.getPolicy(5);
   const formattedPolicy = {
     policyId: policy[0].toNumber(),
     farmerAddress: policy[1],

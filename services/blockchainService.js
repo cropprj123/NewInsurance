@@ -19,19 +19,19 @@ class BlockchainService {
   }
 
   async createPolicy(
-    farmerAddress,
+    // farmerAddress,
+    privateKey,
     cropType,
     thresholdValue,
     startDate,
-    endDate,
-    privateKey
+    endDate
   ) {
     try {
       const wallet = new ethers.Wallet(privateKey, this.provider);
       const contractWithSigner = this.contract.connect(wallet);
 
       const tx = await contractWithSigner.createPolicy(
-        farmerAddress,
+        wallet.address,
         cropType,
         thresholdValue,
         startDate,
@@ -39,6 +39,7 @@ class BlockchainService {
       );
 
       await tx.wait();
+      console.log("Policy created!");
       return true;
     } catch (error) {
       console.error("Error creating policy:", error);
